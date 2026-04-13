@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Login | Noorul Hikma</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .login-section { min-height: 100vh; display: flex; align-items: center; justify-content: center; background-color: var(--bg-primary); padding: 2rem; position: relative; z-index: 1; }
+        .login-section::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at center, rgba(10,54,34,0.4) 0%, var(--bg-primary) 70%); z-index: -1; }
+        .login-card { background: rgba(18, 18, 18, 0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 12px; padding: 3rem 2rem; box-shadow: 0 4px 30px rgba(0,0,0,0.5); width: 100%; max-width: 420px; position: relative; border: 1px solid rgba(255,255,255,0.05); }
+        .login-card::before { content: ''; position: absolute; inset: 0; padding: 2px; border-radius: 12px; background: linear-gradient(135deg, rgba(212, 175, 55, 0.4), transparent); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
+        .login-header { text-align: center; margin-bottom: 2rem; }
+        .login-title { font-family: 'Outfit', sans-serif; font-size: 1.8rem; color: var(--text-primary); margin-bottom: 0.5rem; }
+        .login-desc { color: var(--text-secondary); font-size: 0.95rem; }
+        .form-group { margin-bottom: 1.5rem; text-align: left; }
+        .btn-full { width: 100%; justify-content: center; margin-top: 1rem; }
+        .error-msg { color: #ff6b6b; font-size: 0.85rem; margin-top: 1rem; text-align: center; display: none; background: rgba(255, 107, 107, 0.1); padding: 0.5rem; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <nav class="navbar scrolled">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-text">Noorul <span class="highlight">Hikma</span></span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="official-login.html" class="nav-link">Official Login</a></li>
+                <li><a href="index.html" class="nav-link">Back to Website</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="login-section">
+        <div class="login-card fade-in-section">
+            <a href="index.html" style="position: absolute; top: 1.5rem; left: 1.5rem; color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; gap: 0.4rem; transition: color 0.3s; z-index: 10;" onmouseover="this.style.color='var(--highlight-color)'" onmouseout="this.style.color='var(--text-secondary)'">
+                <span>←</span> Back
+            </a>
+            <div class="login-header">
+                <h1 class="login-title">Student <span class="highlight-green">Login</span></h1>
+                <p class="login-desc">Enter your Admission ID and password to access your secure dashboard.</p>
+            </div>
+            <form id="studentLoginForm">
+                <div class="form-group">
+                    <label for="admissionId" class="form-label">Admission ID</label>
+                    <input type="text" id="admissionId" class="form-control" placeholder="Enter your Admission ID" required autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <div style="position:relative;">
+                        <input type="password" id="password" class="form-control" placeholder="Enter your password" required style="padding-right:3rem;">
+                        <button type="button" id="togglePass" onclick="document.getElementById('password').type = document.getElementById('password').type === 'password' ? 'text' : 'password'; this.textContent = document.getElementById('password').type === 'password' ? '👁' : '🙈';" style="position:absolute; right:0.8rem; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; font-size:1rem; color:var(--text-secondary);">👁</button>
+                    </div>
+                    <p style="margin:0.5rem 0 0; font-size:0.78rem; color:var(--text-secondary);">Default password is <strong style="color:var(--highlight-color);">1234</strong> if not changed by official.</p>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Login to Student Portal</button>
+                <div id="errorMsg" class="error-msg">❌ Admission ID or password is incorrect. Check with your college official for your exact ID and password.</div>
+                
+                <div style="margin-top: 1.5rem; text-align: center; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1rem;">
+                    <a href="official-login.html" style="color: var(--text-secondary); font-size: 0.85rem; display: inline-block;">Are you an official? <span style="color: var(--secondary-color); font-weight: 500;">Official Login</span></a>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+    <script>
+        document.getElementById('studentLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const user = document.getElementById('admissionId').value.trim();
+            const pass = document.getElementById('password').value.trim();
+            const btn = this.querySelector('button[type="submit"]');
+            
+            btn.textContent = 'Authenticating...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                const students = JSON.parse(localStorage.getItem('noorulHikmaStudents')) || [];
+                // Find the exact student record using case-insensitive comparison
+                const student = students.find(s =>
+                    s.adminNo.toLowerCase() === user.toLowerCase() &&
+                    s.password === pass
+                );
+
+                if (student) {
+                    localStorage.setItem('studentAuth', 'true');
+                    // Store the EXACT adminNo from the database for reliable lookup
+                    localStorage.setItem('studentUsername', student.adminNo);
+                    window.location.href = 'student-dashboard.html';
+                } else {
+                    document.getElementById('errorMsg').style.display = 'block';
+                    btn.textContent = 'Login to Student Portal';
+                    btn.disabled = false;
+                }
+            }, 600);
+        });
+    </script>
+</body>
+</html>

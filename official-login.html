@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Official Login | Noorul Hikma</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .login-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--bg-primary);
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .login-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(10, 54, 34, 0.4) 0%, var(--bg-primary) 70%);
+            z-index: -1;
+        }
+
+        .login-card {
+            background: rgba(18, 18, 18, 0.6);
+            backdrop-filter: blur(20px);
+            border-radius: 12px;
+            padding: 3rem 2rem;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 420px;
+            position: relative;
+            border: 2px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            pointer-events: none;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .login-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .btn-full {
+            width: 100%;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .error-msg {
+            color: #ff6b6b;
+            font-size: 0.85rem;
+            margin-top: 1rem;
+            text-align: center;
+            display: none;
+            background: rgba(255, 107, 107, 0.1);
+            padding: 0.5rem;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar scrolled">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-text">Noorul <span class="highlight">Hikma</span></span>
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="student-login.html" class="nav-link">Student Login</a></li>
+                <li><a href="index.html" class="nav-link">Back to Website</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ===== LOGIN FORM ===== -->
+    <section class="login-section" id="loginSection">
+        <div class="login-card fade-in-section">
+            <a href="index.html"
+                style="position: absolute; top: 1.5rem; left: 1.5rem; color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; gap: 0.4rem; transition: color 0.3s; z-index: 10;"
+                onmouseover="this.style.color='var(--highlight-color)'"
+                onmouseout="this.style.color='var(--text-secondary)'">
+                <span>←</span> Back
+            </a>
+            <div class="login-header">
+                <h1 class="login-title">College <span class="highlight-green">Official Login</span></h1>
+                <p class="login-desc">Enter your official credentials to securely access the management dashboard.</p>
+            </div>
+            <form id="officialLoginForm">
+                <div class="form-group">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" id="username" class="form-control" placeholder="Enter username" required
+                        autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                        <label for="password" class="form-label" style="margin-bottom: 0;">Password</label>
+                        <a href="#" id="forgotPassword"
+                            style="font-size: 0.8rem; color: var(--highlight-color); text-decoration: none;">Forgot
+                            Password?</a>
+                    </div>
+                    <input type="password" id="password" class="form-control" placeholder="Enter password" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Login to Dashboard</button>
+                <div id="errorMsg" class="error-msg">❌ Invalid username or password.</div>
+
+                <div
+                    style="margin-top: 1.5rem; text-align: center; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1rem;">
+                    <a href="#" id="toggleReset"
+                        style="color: var(--secondary-color); font-size: 0.85rem; font-weight: 500;">Change Official
+                        Credentials?</a>
+                    <div style="margin-top: 0.8rem;">
+                        <a href="student-login.html"
+                            style="color: var(--text-secondary); font-size: 0.85rem; display: inline-block;">Are you a
+                            student? <span style="color: #10b981; font-weight: 500;">Student Login</span></a>
+                    </div>
+                </div>
+                <div id="resetSection"
+                    style="display: none; margin-top: 1.5rem; text-align: left; background: rgba(255,255,255,0.02); padding: 1.5rem; border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.2);">
+                    <h3 style="color: var(--text-primary); font-size: 1rem; margin-bottom: 1rem;">Update Master Access
+                    </h3>
+                    <div class="form-group">
+                        <label class="form-label" style="font-size: 0.8rem;">Current Password (to verify)</label>
+                        <input type="password" id="currentVerify" class="form-control" placeholder="Verify identity"
+                            style="padding: 0.6rem;">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" style="font-size: 0.8rem;">New Official ID</label>
+                        <input type="text" id="newOfficialId" class="form-control" placeholder="New Username"
+                            style="padding: 0.6rem;">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" style="font-size: 0.8rem;">New Official Password</label>
+                        <input type="password" id="newOfficialPass" class="form-control" placeholder="New Password"
+                            style="padding: 0.6rem;">
+                    </div>
+                    <button type="button" id="confirmReset" class="btn btn-secondary btn-full"
+                        style="padding: 0.6rem;">Apply New Credentials</button>
+                </div>
+                <div id="forgotPasswordSection"
+                    style="display: none; margin-top: 1.5rem; text-align: left; background: rgba(255,255,255,0.02); padding: 1.5rem; border-radius: 8px; border: 1px solid rgba(16, 185, 129, 0.2);">
+                    <h3 style="color: var(--text-primary); font-size: 1rem; margin-bottom: 1rem;">Reset Password</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1rem;">Enter your
+                        registered admin email address. A recovery link will be sent to you.</p>
+                    <div class="form-group">
+                        <label class="form-label" style="font-size: 0.8rem;">Admin Email Address</label>
+                        <input type="email" id="recoveryEmail" class="form-control" placeholder="admin@example.com"
+                            style="padding: 0.6rem;">
+                    </div>
+                    <button type="button" id="sendRecoveryBtn" class="btn btn-primary btn-full"
+                        style="padding: 0.6rem;">Send Recovery Link</button>
+                    <div id="recoveryMsg"
+                        style="display: none; color: #10b981; font-size: 0.85rem; margin-top: 1rem; text-align: center;">
+                        ✅ Recovery link sent successfully!</div>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+    <script>
+        // ===== CHECK IF ALREADY LOGGED IN =====
+        if (localStorage.getItem('officialAuth') === 'true') {
+            window.location.href = "admin.html";
+        }
+
+        document.getElementById('officialLoginForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const user = document.getElementById('username').value.trim();
+            const pass = document.getElementById('password').value.trim();
+            const btn = this.querySelector('button[type="submit"]');
+            btn.textContent = 'Authenticating...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                const storedUser = localStorage.getItem('officialUsername');
+                const storedPass = localStorage.getItem('officialPassword');
+                if (user === storedUser && pass === storedPass) {
+                    localStorage.setItem('officialAuth', 'true');
+                    window.location.href = "admin.html";
+                } else {
+                    document.getElementById('errorMsg').style.display = 'block';
+                    btn.textContent = 'Login to Dashboard';
+                    btn.disabled = false;
+                }
+            }, 600);
+        });
+
+        // ===== CREDENTIAL RESET =====
+        document.getElementById('toggleReset').addEventListener('click', function (e) {
+            e.preventDefault();
+            const section = document.getElementById('resetSection');
+            section.style.display = section.style.display === 'none' ? 'block' : 'none';
+        });
+
+        document.getElementById('confirmReset').addEventListener('click', function () {
+            const currentPass = document.getElementById('currentVerify').value;
+            const newId = document.getElementById('newOfficialId').value.trim();
+            const newPass = document.getElementById('newOfficialPass').value.trim();
+            const storedPass = localStorage.getItem('officialPassword');
+            if (currentPass !== storedPass) { alert('Verification failed: Current password is incorrect.'); return; }
+            if (newId.length < 3 || newPass.length < 4) { alert('New ID must be 3+ chars and Password 4+ chars.'); return; }
+            localStorage.setItem('officialUsername', newId);
+            localStorage.setItem('officialPassword', newPass);
+            alert('Official credentials updated successfully!');
+            location.reload();
+        });
+
+        // ===== FORGOT PASSWORD =====
+        document.getElementById('forgotPassword').addEventListener('click', function (e) {
+            e.preventDefault();
+            const forgotSection = document.getElementById('forgotPasswordSection');
+            const resetSection = document.getElementById('resetSection');
+            resetSection.style.display = 'none'; // hide the other section
+            forgotSection.style.display = forgotSection.style.display === 'none' ? 'block' : 'none';
+        });
+
+        document.getElementById('sendRecoveryBtn').addEventListener('click', function () {
+            const email = document.getElementById('recoveryEmail').value.trim();
+            if (!email.includes('@')) {
+                alert('Please enter a valid email address.');
+                return;
+            }
+            const btn = this;
+            btn.textContent = 'Sending...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                btn.textContent = 'Send Recovery Link';
+                btn.disabled = false;
+                document.getElementById('recoveryMsg').style.display = 'block';
+                document.getElementById('recoveryEmail').value = '';
+
+                setTimeout(() => {
+                    document.getElementById('forgotPasswordSection').style.display = 'none';
+                    document.getElementById('recoveryMsg').style.display = 'none';
+                }, 3000);
+            }, 1000);
+        });
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script>
+        if (localStorage.getItem('officialAuth') !== 'true') {
+            window.location.href = 'official-login.html';
+        }
+        function logout() {
+            localStorage.removeItem('officialAuth');
+            window.location.href = 'official-login.html';
+        }
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Achievements Management | Official Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .admin-section { padding: 120px 2rem 4rem; min-height: 100vh; background-color: var(--bg-primary); }
+        .dashboard-card { background: var(--bg-secondary); border-radius: 12px; padding: 2rem; box-shadow: 0 4px 20px rgba(0,0,0,0.2); overflow-x: auto; position: relative; border: 2px solid rgba(212, 175, 55, 0.2); }
+        .admin-nav { display: flex; gap: 1rem; margin-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem; flex-wrap: wrap; }
+        .admin-nav a { color: #888; font-weight: 500; padding: 0.5rem 1rem; border-radius: 6px; transition: var(--transition); }
+        .admin-nav a:hover { background: rgba(255,255,255,0.05); color: #fff; }
+        .admin-nav a.active { background: var(--primary-color); color: white; }
+
+        .form-group { margin-bottom: 1rem; }
+        .form-label { display: block; margin-bottom: 0.5rem; color: var(--text-primary); font-size: 0.9rem; }
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            background: #ffffff !important;
+            border: 1px solid rgba(255,255,255,0.3) !important;
+            border-radius: 8px;
+            color: #111111 !important;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: rgba(212,175,55,0.8) !important;
+            background: #fff !important;
+            box-shadow: 0 0 0 3px rgba(212,175,55,0.2);
+        }
+        .form-control option { background: #fff; color: #111; }
+        .form-control::placeholder { color: #999; }
+        
+        .achievement-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+        .ach-card { background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; position: relative; }
+        .ach-img { width: 100%; height: 200px; object-fit: cover; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .ach-content { padding: 1.2rem; }
+        .ach-title { color: var(--highlight-color); font-family: 'Outfit', sans-serif; font-size: 1.2rem; margin-bottom: 0.5rem; }
+        .ach-desc { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5; }
+        .ach-delete { position: absolute; top: 10px; right: 10px; background: rgba(255,0,0,0.8); color: white; border: none; border-radius: 5px; padding: 0.3rem 0.6rem; cursor: pointer; }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar scrolled">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-text">Noorul <span class="highlight">Hikma</span></span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="admin.html" class="nav-link">Official Panel</a></li>
+                <li><a href="#" class="nav-link cta-btn" onclick="logout(); return false;">Secure Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="admin-section">
+        <div class="container">
+            <div class="section-title" style="margin-bottom: 1rem; text-align: left;">Official <span class="highlight-green">Dashboard</span></div>
+            
+            <div class="admin-nav">
+                <a href="admin.html">Admission Applications</a>
+                <a href="students-management.html">Student Management</a>
+                <a href="results-management.html">Results Management</a>
+                <a href="achievements-management.html" class="active">Achievements Updates</a>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 2rem;">
+                <div class="dashboard-card">
+                    <h3 style="color: var(--text-primary); margin-bottom: 1.5rem;">Add New Achievement</h3>
+                    <form id="achForm">
+                        <div class="form-group">
+                            <label class="form-label">Achievement Title *</label>
+                            <input type="text" id="achTitle" class="form-control" placeholder="e.g. State Kalotsav Winners" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Category *</label>
+                            <select id="achCategory" class="form-control" required>
+                                <option value="" disabled selected>Select Category</option>
+                                <option value="Academic">📚 Academic</option>
+                                <option value="Arts">🎭 Arts</option>
+                                <option value="Islamic">☪️ Islamic</option>
+                                <option value="Sports">🏅 Sports</option>
+                                <option value="Community">🤝 Community</option>
+                                <option value="Other">✨ Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Student / Team Name</label>
+                            <input type="text" id="achStudent" class="form-control" placeholder="e.g. Mohammed Rahil, Year 5">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Upload Photo</label>
+                            <div id="achDropZone" style="border:2px dashed rgba(212,175,55,0.3); border-radius:8px; padding:1rem; text-align:center; cursor:pointer;" onclick="document.getElementById('achFileInput').click()">
+                                <span style="font-size:1.5rem;">📷</span>
+                                <p style="color:#888; font-size:0.8rem; margin:0.3rem 0 0;">Click to upload or drag & drop</p>
+                            </div>
+                            <input type="file" id="achFileInput" accept="image/*" style="display:none" onchange="previewAchImg(this)">
+                            <img id="achImgPreview" style="display:none; max-width:100%; max-height:120px; border-radius:6px; margin-top:0.6rem;" alt="Preview">
+                            <div style="display:flex; align-items:center; gap:0.5rem; margin-top:0.5rem;">
+                                <span style="color:#666; font-size:0.78rem; white-space:nowrap;">Or URL:</span>
+                                <input type="text" id="achImage" class="form-control" placeholder="https://..." style="flex:1; padding:0.5rem;">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Description / Details *</label>
+                            <textarea id="achDesc" class="form-control" rows="3" placeholder="Describe the achievement..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">📤 Publish to Website</button>
+                        <a href="achievements.html" target="_blank" style="display:block; text-align:center; margin-top:0.8rem; font-size:0.82rem; color:var(--highlight-color);">View Public Gallery →</a>
+                    </form>
+                </div>
+                
+                <div class="dashboard-card">
+                    <h3 style="color: var(--text-primary); margin-bottom: 1.5rem;">Current Achievements Gallery</h3>
+                    <div id="achGallery" class="achievement-grid">
+                        <!-- Loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Clear any old default/sample data on load
+        (function clearOldDefaults() {
+            const stored = JSON.parse(localStorage.getItem('noorulHikmaAchievements'));
+            if (stored && stored.some(a => [1,2,3,4].includes(a.id) && !a.isOfficial)) {
+                localStorage.removeItem('noorulHikmaAchievements');
+            }
+        })();
+
+        function loadAchievements() {
+            let achData = JSON.parse(localStorage.getItem('noorulHikmaAchievements')) || [];
+
+            const gallery = document.getElementById('achGallery');
+            if (achData.length === 0) {
+                gallery.innerHTML = '<div style="text-align:center; padding:3rem; color:#888;"><div style="font-size:3rem;">🏅</div><p style="margin-top:0.8rem;">No achievements uploaded yet.<br>Use the form to add your first one!</p></div>';
+                return;
+            }
+
+            gallery.innerHTML = achData.map(a => `
+                <div class="ach-card">
+                    <button class="ach-delete" onclick="deleteAch(${a.id})">Delete</button>
+                    <img src="${a.image}" alt="${a.title}" class="ach-img" onerror="this.style.display='none'">
+                    <div class="ach-content">
+                        <h4 class="ach-title">${a.title}</h4>
+                        ${a.student ? `<p style="color:var(--highlight-color); font-size:0.8rem; margin-bottom:0.4rem;">🎓 ${a.student}</p>` : ''}
+                        <p class="ach-desc">${a.desc}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        document.getElementById('achForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = this.querySelector('button[type="submit"]');
+            btn.textContent = 'Publishing...';
+            btn.disabled = true;
+
+            const title = document.getElementById('achTitle').value.trim();
+            const category = document.getElementById('achCategory').value;
+            const student = document.getElementById('achStudent').value.trim();
+            const desc = document.getElementById('achDesc').value.trim();
+            const fileInput = document.getElementById('achFileInput');
+            let image = document.getElementById('achImage').value.trim();
+
+            if (fileInput.files && fileInput.files[0]) {
+                image = await new Promise(resolve => {
+                    const reader = new FileReader();
+                    reader.onload = e => resolve(e.target.result);
+                    reader.readAsDataURL(fileInput.files[0]);
+                });
+            }
+
+            if (!image) {
+                alert('Please provide a photo or image URL.');
+                btn.textContent = '📤 Publish to Website';
+                btn.disabled = false;
+                return;
+            }
+
+            let achData = JSON.parse(localStorage.getItem('noorulHikmaAchievements')) || fallbackDummy;
+            achData.push({ id: Date.now(), title, category, student, image, desc });
+            localStorage.setItem('noorulHikmaAchievements', JSON.stringify(achData));
+
+            this.reset();
+            document.getElementById('achImgPreview').style.display = 'none';
+            btn.textContent = '📤 Publish to Website';
+            btn.disabled = false;
+            loadAchievements();
+        });
+
+        function previewAchImg(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    const img = document.getElementById('achImgPreview');
+                    img.src = e.target.result;
+                    img.style.display = 'block';
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function deleteAch(id) {
+            if(confirm('Are you sure you want to delete this achievement?')) {
+                let achData = JSON.parse(localStorage.getItem('noorulHikmaAchievements')) || fallbackDummy;
+                achData = achData.filter(a => a.id !== id);
+                localStorage.setItem('noorulHikmaAchievements', JSON.stringify(achData));
+                loadAchievements();
+            }
+        }
+
+        window.onload = loadAchievements;
+    </script>
+</body>
+</html>

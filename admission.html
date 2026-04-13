@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admission Portal | Noorul Hikma</title>
+    <meta name="description"
+        content="Apply for admission at Noorul Hikma Shereea Arts College for the upcoming academic year.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav id="navbar" class="navbar scrolled">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-text">Noorul <span class="highlight">Hikma</span></span>
+            </a>
+            <div class="menu-toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html#home" class="nav-link">Home</a></li>
+                <li><a href="index.html#about" class="nav-link">About Us</a></li>
+                <li><a href="index.html#programs" class="nav-link">Programs</a></li>
+                <li><a href="admission.html" class="nav-link active">Admissions</a></li>
+                <li><a href="student-login.html" class="nav-link">Student Login</a></li>
+                <li><a href="official-login.html" class="nav-link">Official Login</a></li>
+                <li><a href="admission.html" class="nav-link cta-btn">Apply Now</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Admission Form Section -->
+    <section class="form-section">
+        <div class="form-overlay"></div>
+        <div class="admission-container fade-in-section">
+            <div class="form-card">
+                <div class="form-header">
+                    <h1 class="section-title">Admission <span class="highlight-green">Application</span></h1>
+                    <p>Begin your journey of divine knowledge and modern excellence. Fill out the application form
+                        below.</p>
+                </div>
+
+                <form id="admissionForm" action="https://docs.google.com/forms/d/e/1FAIpQLScUmu3mHQN2BB1ds3amjKPJXoeu4sDOuIF0ZnyGJgjCn3EfyQ/formResponse" method="POST" target="hidden_iframe">
+
+                    <h3 class="section-label"
+                        style="display: block; border-bottom: 2px solid var(--accent-color); padding-bottom: 0.5rem; margin-bottom: 1.5rem; margin-top: 1rem;">
+                        Personal Information</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="fullName" class="form-label">Full Name</label>
+                            <input type="text" id="fullName" name="entry.1097432130" class="form-control"
+                                placeholder="Enter your full name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="dob" class="form-label">Date of Birth</label>
+                            <!-- Date fields for Google Form -->
+                            <input type="hidden" name="entry.2144450609_year" id="dob_year">
+                            <input type="hidden" name="entry.2144450609_month" id="dob_month">
+                            <input type="hidden" name="entry.2144450609_day" id="dob_day">
+                            <input type="date" id="dob" class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone" class="form-label">Phone Number</label>
+                            <input type="tel" id="phone" name="entry.2099623882" class="form-control" placeholder="+91 XXXXX XXXXX"
+                                required>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="email" id="email" name="entry.1977205613" class="form-control"
+                                placeholder="your.email@example.com" required>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="address" class="form-label">Residential Address</label>
+                            <textarea id="address" name="entry.712086042" class="form-control"
+                                placeholder="Enter your full residential address" required></textarea>
+                        </div>
+                    </div>
+
+                    <h3 class="section-label"
+                        style="display: block; border-bottom: 2px solid var(--accent-color); padding-bottom: 0.5rem; margin-bottom: 1.5rem; margin-top: 2rem;">
+                        Academic Information</h3>
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label for="course" class="form-label">Select Program</label>
+                            <select id="course" name="entry.1513396578" class="form-control" required>
+                                <option value="" disabled selected>Select a program to apply for</option>
+                                <option value="Faizy Course">Faizy Course</option>
+                                <option value="Dras System">Dras System</option>
+                                <option value="Quran Hifz Course">Quran Hifz Course</option>
+                            </select>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="schoolEducation" class="form-label">School Education</label>
+                            <input type="text" id="schoolEducation" name="entry.855763952" class="form-control">
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="madrassaEducation" class="form-label">Madrassa Education</label>
+                            <input type="text" id="madrassaEducation" name="entry.50236300" class="form-control">
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="marks" class="form-label">Marks / Percentage Obtained</label>
+                            <input type="text" id="marks" name="entry.243782956" class="form-control" placeholder="e.g. 85% or 450/500">
+                        </div>
+                    </div>
+
+                    <div class="submit-btn-wrapper">
+                        <button type="submit" class="btn btn-primary btn-large">Submit Application</button>
+                    </div>
+                </form>
+                <!-- Hidden Iframe to handle submission -->
+                <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(typeof submitted !== 'undefined' && submitted) { handleFormResponse(); }"></iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container pb-4">
+            <div class="footer-grid">
+                <div class="footer-col brand-col">
+                    <h3 class="footer-logo">Noorul <span class="highlight-gold">Hikma</span></h3>
+                    <p class="footer-desc">Shereea Arts College</p>
+                    <p>Illuminating minds with divine wisdom and modern knowledge to shape balanced and visionary
+                        leaders.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html#home">Home</a></li>
+                        <li><a href="index.html#about">About Us</a></li>
+                        <li><a href="index.html#programs">Academic Programs</a></li>
+                        <li><a href="admission.html">Admissions Portal</a></li>
+                        <li><a href="student-login.html">Student Login</a></li>
+                        <li><a href="official-login.html" style="color: var(--highlight-color);">Official Login</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col contact-col">
+                    <h4>Contact Us</h4>
+                    <div class="contact-item">
+                        <span class="icon">📍</span>
+                        <p>Noorul Hikma Campus, <br>Kerala, India 673001</p>
+                    </div>
+                    <div class="contact-item">
+                        <span class="icon">📞</span>
+                        <p>+91 987 654 3210</p>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Noorul Hikma Shereea Arts College. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

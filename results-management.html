@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script>
+        if (localStorage.getItem('officialAuth') !== 'true') {
+            window.location.href = 'official-login.html';
+        }
+        function logout() {
+            localStorage.removeItem('officialAuth');
+            window.location.href = 'official-login.html';
+        }
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results Management | Official Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .admin-section {
+            padding: 120px 2rem 4rem;
+            min-height: 100vh;
+            background-color: var(--bg-primary);
+        }
+
+        .dashboard-card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 2.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .dashboard-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            padding: 2px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.4), transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        .admin-nav {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 1rem;
+        }
+
+        .admin-nav a {
+            color: #888;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: var(--transition);
+        }
+
+        .admin-nav a:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+        }
+
+        .admin-nav a.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .result-form-section {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .subject-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 0.8rem;
+        }
+
+        .subject-name {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .mark-input {
+            width: 100%;
+            padding: 0.6rem;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #fff;
+            border-radius: 6px;
+            text-align: center;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        .mark-input:focus {
+            background: rgba(212, 175, 55, 0.1);
+            border-color: var(--highlight-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(10, 54, 34, 0.2);
+        }
+        .mark-input.ob-val {
+            color: #0a3622;
+            font-weight: 700;
+            background: rgba(10, 54, 34, 0.05);
+        }
+        .mark-input.max-val {
+            background: rgba(255, 184, 0, 0.15);
+            border-color: rgba(212, 175, 55, 0.4);
+            color: #856404;
+            font-weight: bold;
+        }
+
+        .search-results {
+            position: absolute;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            width: 100%;
+            z-index: 100;
+            border-radius: 0 0 8px 8px;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .search-item {
+            padding: 0.8rem 1rem;
+            cursor: pointer;
+            border-bottom: 1px solid #222;
+        }
+
+        .search-item:hover {
+            background: var(--primary-color);
+        }
+
+        .subject-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: rgba(10, 54, 34, 0.4);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            margin: 0.25rem;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            transition: var(--transition);
+        }
+
+        .subject-chip:hover {
+            border-color: var(--highlight-color);
+            background: rgba(10, 54, 34, 0.6);
+        }
+
+        .subject-chip button {
+            background: rgba(255, 107, 107, 0.1);
+            border: 1px solid rgba(255, 107, 107, 0.2);
+            color: #ff6b6b;
+            cursor: pointer;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .subject-chip button:hover {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .control-panel {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar scrolled">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-text">Noorul <span class="highlight">Hikma</span></span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="admin.html" class="nav-link">Official Panel</a></li>
+                <li><a href="#" class="nav-link cta-btn" onclick="logout(); return false;">Secure Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="admin-section">
+        <div class="container">
+            <div class="section-title" style="margin-bottom: 1rem; text-align: left;">Official <span
+                    class="highlight-green">Dashboard</span></div>
+
+            <div class="admin-nav">
+                <a href="admin.html">Admission Applications</a>
+                <a href="students-management.html">Student Management</a>
+                <a href="results-management.html" class="active">Results Management</a>
+                <a href="achievements-management.html">Achievements Updates</a>
+            </div>
+
+            <div class="dashboard-card">
+                <div style="margin-bottom: 2rem;">
+                    <h3 style="color: var(--text-primary); margin:0;">Upload Student Exam Results</h3>
+                </div>
+
+                <form id="resultsForm">
+                    <div class="form-grid">
+                        <!-- Left Column: Selection & Actions -->
+                        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                            <div class="control-panel">
+                                <h4
+                                    style="margin-top: 0; margin-bottom: 1.2rem; color: var(--highlight-color); font-size: 1rem;">
+                                    1. Select Student</h4>
+                                <div class="form-group" style="position: relative; margin-bottom: 0;">
+                                    <input type="text" id="studentSearch" class="form-control"
+                                        placeholder="Type name or Admission ID..." autocomplete="off"
+                                        oninput="searchStudents()">
+                                    <input type="hidden" id="selectedStudentId">
+                                    <div id="searchResults" class="search-results"></div>
+                                    <div id="selectedStudentDisplay"
+                                        style="margin-top: 10px; color: var(--highlight-color); font-weight: bold; display: none;">
+                                        Selected: <span id="stuNameLabel"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="control-panel">
+                                <h4
+                                    style="margin-top: 0; margin-bottom: 1.2rem; color: var(--highlight-color); font-size: 1rem;">
+                                    2. Academic Details</h4>
+                                <div class="form-group">
+                                    <label class="form-label">Course Year</label>
+                                    <select id="academicClass" class="form-control" required onchange="onYearChange()">
+                                        <option value="" disabled selected>Select Year</option>
+                                        <option value="Year 1">Year 1</option>
+                                        <option value="Year 2">Year 2</option>
+                                        <option value="Year 3">Year 3</option>
+                                        <option value="Year 4">Year 4</option>
+                                        <option value="Year 5">Year 5</option>
+                                        <option value="Year 6">Year 6</option>
+                                        <option value="Year 7">Year 7</option>
+                                        <option value="Year 8">Year 8</option>
+                                        <option value="Year 9">Year 9</option>
+                                        <option value="Year 10">Year 10</option>
+                                        <option value="Year 11">Year 11</option>
+                                        <option value="Year 12">Year 12</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">Semester</label>
+                                    <select id="examType" class="form-control" required>
+                                        <option value="" disabled selected>Select Semester</option>
+                                        <option value="Semester 1">Semester 1</option>
+                                        <option value="Semester 2">Semester 2</option>
+                                        <option value="Semester 3">Semester 3</option>
+                                        <option value="Semester 4">Semester 4</option>
+                                        <option value="Semester 5">Semester 5</option>
+                                        <option value="Semester 6">Semester 6</option>
+                                        <option value="Semester 7">Semester 7</option>
+                                        <option value="Semester 8">Semester 8</option>
+                                        <option value="Semester 9">Semester 9</option>
+                                        <option value="Semester 10">Semester 10</option>
+                                        <option value="Semester 11">Semester 11</option>
+                                        <option value="Semester 12">Semester 12</option>
+                                        <option value="Semester 13">Semester 13</option>
+                                        <option value="Semester 14">Semester 14</option>
+                                        <option value="Semester 15">Semester 15</option>
+                                        <option value="Semester 16">Semester 16</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-large"
+                                style="width: 100%; margin-top: 1rem;">Save Student Results</button>
+                        </div>
+
+                        <!-- Right Column: Subject Management & Marks -->
+                        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                            <!-- Subject Management Section -->
+                            <div class="control-panel" id="managementPanel" style="display: none;">
+                                <div
+                                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem;">
+                                    <h4 style="margin: 0; color: var(--highlight-color); font-size: 1rem;">3. Manage
+                                        Year Curriculum</h4>
+                                    <button type="button" class="btn btn-outline"
+                                        style="font-size: 0.75rem; padding: 0.3rem 0.6rem; border-color: #ff4d4d; color: #ff4d4d;"
+                                        onclick="clearAllSubjects()">Clear All</button>
+                                </div>
+
+                                <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+                                    <input type="text" id="newSubInput" class="form-control"
+                                        placeholder="Add custom subject..." style="flex: 1; padding: 0.6rem;">
+                                    <button type="button" class="btn btn-primary" onclick="addSubject()"
+                                        style="padding: 0.6rem 1rem;">Add Subject</button>
+                                </div>
+
+                                <div
+                                    style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; padding: 0.8rem; background: rgba(255,255,255,0.02); border-radius: 6px; border: 1px dashed rgba(255,255,255,0.1);">
+                                    <span style="font-size: 0.8rem; color: #888; white-space: nowrap;">Or Copy
+                                        From:</span>
+                                    <select id="copyFromYear" class="form-control"
+                                        style="padding: 0.4rem; font-size: 0.8rem; flex: 1;" onchange="copySubjects()">
+                                        <option value="" disabled selected>Select another year...</option>
+                                        <option value="Year 1">Year 1</option>
+                                        <option value="Year 2">Year 2</option>
+                                        <option value="Year 3">Year 3</option>
+                                        <option value="Year 4">Year 4</option>
+                                        <option value="Year 5">Year 5</option>
+                                        <option value="Year 6">Year 6</option>
+                                        <option value="Year 7">Year 7</option>
+                                        <option value="Year 8">Year 8</option>
+                                        <option value="Year 9">Year 9</option>
+                                        <option value="Year 10">Year 10</option>
+                                        <option value="Year 11">Year 11</option>
+                                        <option value="Year 12">Year 12</option>
+                                    </select>
+                                </div>
+
+                                <div id="subjectChips"
+                                    style="max-height: 150px; overflow-y: auto; border: 1px solid rgba(255,255,255,0.05); padding: 0.8rem; border-radius: 6px; background: rgba(0,0,0,0.15); display: flex; flex-wrap: wrap;">
+                                    <!-- Chips will appear here -->
+                                </div>
+                            </div>
+
+                            <!-- Subject Marks List -->
+                            <div id="subjectsSection" class="result-form-section"
+                                style="display: none; flex: 1; margin-left: 0;">
+                                <h4
+                                    style="margin-top: 0; margin-bottom: 1.5rem; color: black(--highlight-color); font-size: 1rem;">
+                                    4. Enter Marks</h4>
+                                <div class="subject-row"
+                                    style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; font-weight: bold; font-size: 0.8rem; color: #888;">
+                                    <div>SUBJECT</div>
+                                    <div style="text-align: center;">MAX</div>
+                                    <div style="text-align: center;">OBTAINED</div>
+                                </div>
+                                <div id="subjectList" style="margin-top: 1rem;">
+                                    <!-- Populated by JS -->
+                                </div>
+                            </div>
+
+                            <div id="noSelectionMsg"
+                                style="text-align: center; padding: 4rem 2rem; border: 2px dashed rgba(255,255,255,0.05); border-radius: 12px; color: #555;">
+                                <p>Please select a **Course Year** to manage subjects and enter marks.</p>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        const students = JSON.parse(localStorage.getItem('noorulHikmaStudents')) || [];
+        const defaultSubjects = ["Theology", "Arabic Literature", "English", "Mathematics", "Science", "Social Studies", "General Knowledge"];
+
+        // Initialize year-specific subjects if they don't exist
+        let subjectsByYear = JSON.parse(localStorage.getItem('noorulHikmaSubjectsByYear'));
+        if (!subjectsByYear) {
+            subjectsByYear = {};
+            // Migrate from old simple list or defaults
+            const oldList = JSON.parse(localStorage.getItem('noorulHikmaSubjectsList')) || defaultSubjects;
+            for (let i = 1; i <= 12; i++) {
+                subjectsByYear[`Year ${i}`] = oldList.map(s => ({ name: s, max: 100 }));
+            }
+            localStorage.setItem('noorulHikmaSubjectsByYear', JSON.stringify(subjectsByYear));
+            localStorage.removeItem('noorulHikmaSubjectsList');
+        } else {
+            // Data Migration: Ensure all subjects are objects
+            let changed = false;
+            for (let year in subjectsByYear) {
+                subjectsByYear[year] = subjectsByYear[year].map(s => {
+                    if (typeof s === 'string') {
+                        changed = true;
+                        return { name: s, max: 100 };
+                    }
+                    return s;
+                });
+            }
+            if (changed) {
+                localStorage.setItem('noorulHikmaSubjectsByYear', JSON.stringify(subjectsByYear));
+            }
+        }
+
+        let selectedYearToManage = "Year 1";
+
+        function searchStudents() {
+            const query = document.getElementById('studentSearch').value.toLowerCase();
+            const resultsDiv = document.getElementById('searchResults');
+
+            if (query.length < 2) {
+                resultsDiv.style.display = 'none';
+                return;
+            }
+
+            const matched = students.filter(s =>
+                s.name.toLowerCase().includes(query) || s.adminNo.toLowerCase().includes(query)
+            );
+
+            if (matched.length > 0) {
+                resultsDiv.innerHTML = matched.map(s =>
+                    `<div class="search-item" onclick="selectStudent('${s.id}', '${s.name}', '${s.adminNo}')">
+                        ${s.name} <span style="font-size: 0.8rem; color:#888;">(${s.adminNo})</span>
+                    </div>`
+                ).join('');
+                resultsDiv.style.display = 'block';
+            } else {
+                resultsDiv.style.display = 'none';
+            }
+        }
+
+        let selectedYear = "";
+
+        function selectStudent(id, name, adminNo) {
+            document.getElementById('selectedStudentId').value = id;
+            document.getElementById('studentSearch').value = '';
+            document.getElementById('searchResults').style.display = 'none';
+            document.getElementById('selectedStudentDisplay').style.display = 'block';
+            document.getElementById('stuNameLabel').innerText = `${name} (${adminNo})`;
+        }
+
+        function onYearChange() {
+            selectedYear = document.getElementById('academicClass').value;
+            if (selectedYear) {
+                document.getElementById('noSelectionMsg').style.display = 'none';
+                document.getElementById('managementPanel').style.display = 'block';
+                document.getElementById('subjectsSection').style.display = 'block';
+                renderSubjectChips();
+                updateSubjects();
+            }
+        }
+
+        function updateSubjects() {
+            const list = document.getElementById('subjectList');
+            if (!selectedYear) return;
+
+            const currentSubs = subjectsByYear[selectedYear] || [];
+            if (currentSubs.length === 0) {
+                list.innerHTML = '<div style="text-align: center; padding: 2rem; color: #666;">No subjects added for this year. Add them above.</div>';
+                return;
+            }
+
+            list.innerHTML = currentSubs.map((sub, idx) => `
+                <div class="subject-row">
+                    <div class="subject-name">${sub.name}</div>
+                    <div style="text-align: center;">
+                        <input type="number" class="mark-input max-val" value="${sub.max || 100}" 
+                            onchange="updateMasterMax(${idx}, this.value)">
+                    </div>
+                    <div>
+                        <input type="number" class="mark-input ob-val" data-subject="${sub.name}" 
+                            max="${sub.max || 100}" min="0" required placeholder="0">
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateMasterMax(idx, newVal) {
+            const val = parseInt(newVal) || 100;
+            subjectsByYear[selectedYear][idx].max = val;
+            localStorage.setItem('noorulHikmaSubjectsByYear', JSON.stringify(subjectsByYear));
+            // Update the 'max' attribute of corresponding obtained mark input
+            const obInputs = document.querySelectorAll('.ob-val');
+            if (obInputs[idx]) obInputs[idx].max = val;
+        }
+
+        function renderSubjectChips() {
+            const container = document.getElementById('subjectChips');
+            const subs = subjectsByYear[selectedYear] || [];
+            if (subs.length === 0) {
+                container.innerHTML = '<span style="color: #444; font-size: 0.8rem;">No subjects added.</span>';
+                return;
+            }
+            container.innerHTML = subs.map((sub, idx) => `
+                <div class="subject-chip">
+                    ${sub.name} <span style="font-size: 0.7rem; opacity: 0.6;">(${sub.max})</span>
+                    <button type="button" onclick="removeSubject(${idx})">&times;</button>
+                </div>
+            `).join('');
+        }
+
+        function addSubject() {
+            const input = document.getElementById('newSubInput');
+            const name = input.value.trim();
+            if (name && !subjectsByYear[selectedYear].some(s => s.name === name)) {
+                subjectsByYear[selectedYear].push({ name: name, max: 100 });
+                localStorage.setItem('noorulHikmaSubjectsByYear', JSON.stringify(subjectsByYear));
+                renderSubjectChips();
+                updateSubjects();
+                input.value = '';
+            } else if (name && subjectsByYear[selectedYear].some(s => s.name === name)) {
+                alert('Subject already exists for this year!');
+            }
+        }
+
+        function removeSubject(idx) {
+            subjectsByYear[selectedYear].splice(idx, 1);
+            localStorage.setItem('noorulHikmaSubjectsByYear', JSON.stringify(subjectsByYear));
+            renderSubjectChips();
+            updateSubjects();
+        }
+
+        function clearAllSubjects() {
+            if (confirm('Clear all subjects for this year? This will not affect other years.')) {
+                subjectsByYear[selectedYear] = [];
+                localStorage.setItem('noorulHikmaSubjectsByYear', JSON.stringify(subjectsByYear));
+                renderSubjectChips();
+                updateSubjects();
+            }
+        }
+
+        function copySubjects() {
+            const fromYear = document.getElementById('copyFromYear').value;
+            if (fromYear && fromYear !== selectedYear) {
+                if (confirm(`Copy all subjects from ${fromYear} to ${selectedYear}? This will REPLACE your current subjects for this year.`)) {
+                    subjectsByYear[selectedYear] = [...(subjectsByYear[fromYear] || [])];
+                    localStorage.setItem('noorulHikmaSubjectsByYear', JSON.stringify(subjectsByYear));
+                    renderSubjectChips();
+                    updateSubjects();
+                    document.getElementById('copyFromYear').value = ""; // Reset dropdown
+                }
+            } else if (fromYear === selectedYear) {
+                alert("Cannot copy from the same year!");
+                document.getElementById('copyFromYear').value = "";
+            }
+        }
+
+        document.getElementById('resultsForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const studentId = document.getElementById('selectedStudentId').value;
+            if (!studentId) {
+                alert('Please select a student first.');
+                return;
+            }
+
+            const classNo = document.getElementById('academicClass').value;
+            const exam = document.getElementById('examType').value;
+
+            const marks = {};
+            document.querySelectorAll('.ob-val').forEach(input => {
+                marks[input.dataset.subject] = {
+                    obtained: input.value,
+                    max: input.max
+                };
+            });
+
+            const resultEntry = {
+                studentId,
+                class: classNo,
+                exam,
+                marks,
+                timestamp: new Date().toISOString()
+            };
+
+            // Save to central results store
+            let allResults = JSON.parse(localStorage.getItem('noorulHikmaResults')) || [];
+
+            // Replaces existing if same student+class+exam
+            const existingIdx = allResults.findIndex(r => r.studentId === studentId && r.class === classNo && r.exam === exam);
+            if (existingIdx !== -1) {
+                allResults[existingIdx] = resultEntry;
+            } else {
+                allResults.push(resultEntry);
+            }
+
+            localStorage.setItem('noorulHikmaResults', JSON.stringify(allResults));
+            alert('Results saved successfully!');
+            window.location.reload();
+        });
+
+    </script>
+</body>
+
+</html>

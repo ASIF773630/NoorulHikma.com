@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+        // Security Check: If unauthenticated, redirect to official login
+        if (localStorage.getItem('officialAuth') !== 'true') {
+            window.location.href = 'official-login.html';
+        }
+
+        function logout() {
+            localStorage.removeItem('officialAuth');
+            window.location.href = 'official-login.html';
+        }
+
+        // Official Settings Logic
+        function openOfficialSettings() {
+            const currentId = localStorage.getItem('officialUsername') || 'admin';
+            document.getElementById('newOfficialId').value = currentId;
+            document.getElementById('officialSettingsModal').classList.add('show');
+        }
+
+        function closeOfficialSettings() {
+            document.getElementById('officialSettingsModal').classList.remove('show');
+        }
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Official Panel | Noorul Hikma</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .admin-section { padding: 120px 2rem 4rem; min-height: 100vh; background-color: var(--bg-primary); }
+        .dashboard-card { background: var(--bg-secondary); border-radius: 12px; padding: 2rem; box-shadow: 0 4px 20px rgba(0,0,0,0.2); overflow-x: auto; position: relative; border: 2px solid rgba(212, 175, 55, 0.2); }
+        .dashboard-card::before { content: ''; position: absolute; inset: 0; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); pointer-events: none; }
+        .data-table { width: 100%; border-collapse: collapse; margin-top: 2rem; }
+        .data-table th, .data-table td { padding: 1rem; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); color: var(--text-secondary); }
+        .data-table th { color: var(--text-primary); font-weight: 600; background: rgba(10, 54, 34, 0.5); }
+        .data-table tr:hover { background: rgba(255,255,255,0.02); }
+        .admin-nav { display: flex; gap: 1rem; margin-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem; flex-wrap: wrap; }
+        .admin-nav a { color: #888; font-weight: 500; padding: 0.5rem 1rem; border-radius: 6px; transition: var(--transition); }
+        .admin-nav a:hover { background: rgba(255,255,255,0.05); color: #fff; }
+        .admin-nav a.active { background: var(--primary-color); color: white; }
+
+        /* Achievements Upload Section */
+        .ach-mini-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 1rem; margin-top: 1rem; }
+        .ach-mini-card { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; overflow: hidden; position: relative; }
+        .ach-mini-img { width: 100%; height: 130px; object-fit: cover; }
+        .ach-mini-body { padding: 0.75rem; }
+        .ach-mini-title { color: var(--highlight-color); font-weight: 600; font-size: 0.88rem; margin-bottom: 0.25rem; }
+        .ach-mini-desc { color: var(--text-secondary); font-size: 0.78rem; line-height: 1.4; }
+        .ach-del-btn { position: absolute; top: 6px; right: 6px; background: rgba(220,38,38,0.9); color: #fff; border: none; border-radius: 4px; padding: 2px 7px; font-size: 0.72rem; cursor: pointer; }
+        .ach-del-btn:hover { background: #dc2626; }
+        .upload-zone { border: 2px dashed rgba(212,175,55,0.35); border-radius: 10px; padding: 1rem; text-align: center; cursor: pointer; transition: border-color 0.3s; }
+        .upload-zone:hover { border-color: rgba(212,175,55,0.7); }
+        #qAchFile { display: none; }
+        .preview-img { max-width: 100%; max-height: 130px; border-radius: 6px; margin-top: 0.8rem; display: none; }
+
+        /* Modal Styles */
+        .admin-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 2000; align-items: center; justify-content: center; padding: 1rem; backdrop-filter: blur(5px); }
+        .admin-modal.show { display: flex; }
+        .admin-modal-content { background: var(--bg-secondary); padding: 2.5rem; border-radius: 12px; width: 100%; max-width: 400px; position: relative; border: 1px solid rgba(255,255,255,0.1); }
+        .close-admin-modal { position: absolute; top: 1rem; right: 1.5rem; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary); }
+    </style>
+</head>
+<body>
+    <nav class="navbar scrolled">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-text">Noorul <span class="highlight">Hikma</span></span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#" class="nav-link" onclick="openOfficialSettings(); return false;">Security Settings</a></li>
+                <li><a href="#" class="nav-link cta-btn" onclick="logout(); return false;">Secure Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="admin-section">
+        <div class="container">
+            <div class="section-title" style="margin-bottom: 1rem; text-align: left;">Official <span class="highlight-green">Dashboard</span></div>
+            
+            <div class="admin-nav">
+                <a href="admin.html" class="active">Admission Applications</a>
+                <a href="students-management.html">Student Management</a>
+                <a href="results-management.html">Results Management</a>
+                <a href="achievements-management.html">Achievements Updates</a>
+            </div>
+
+            <p style="color: var(--text-secondary); margin-bottom: 2rem;">Securely view, manage, and export student applications from the website.</p>
+            <div class="dashboard-card">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="color: var(--text-primary); margin:0;">Recent Applications</h3>
+                    <span id="appCount" style="background: var(--accent-color); color: var(--bg-primary); padding: 0.2rem 0.8rem; border-radius: 20px; font-weight: bold; font-size: 0.9rem;">0 total</span>
+                </div>
+                <table class="data-table" id="applicationsTable">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Name</th>
+                            <th>Program</th>
+                            <th>Phone</th>
+                            <th>School Ed</th>
+                            <th>Madrassa Ed</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Data populated by JS -->
+                    </tbody>
+                </table>
+                <div class="admin-actions">
+                    <button class="btn btn-primary" onclick="exportToCSV()">Export to CSV</button>
+                    <button class="btn btn-outline" onclick="clearData()">Clear All Data</button>
+                </div>
+            </div>
+
+            <!-- ===== COLLEGE ACHIEVEMENTS UPLOAD SECTION ===== -->
+            <div class="dashboard-card" style="margin-top: 2.5rem;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; flex-wrap:wrap; gap:1rem;">
+                    <div>
+                        <div class="section-label">College Pride</div>
+                        <h3 style="color:var(--text-primary); margin:0;">🏆 Upload College Achievement</h3>
+                    </div>
+                    <a href="achievements-management.html" class="btn btn-outline" style="font-size:0.85rem; padding:0.4rem 1rem;">Full Achievements Page →</a>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 2fr; gap:2rem; align-items:start;">
+                    <!-- Upload Form -->
+                    <form id="quickAchForm" style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.07); border-radius:10px; padding:1.5rem;">
+                        <div style="margin-bottom:1rem;">
+                            <label style="display:block; color:var(--text-primary); font-size:0.88rem; margin-bottom:0.4rem;">Achievement Title *</label>
+                            <input type="text" id="qAchTitle" class="form-control" placeholder="e.g. State Kalotsav Winner" required style="width:100%; padding:0.7rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:#fff;">
+                        </div>
+                        <div style="margin-bottom:1rem;">
+                            <label style="display:block; color:var(--text-primary); font-size:0.88rem; margin-bottom:0.4rem;">Upload Photo</label>
+                            <div class="upload-zone" onclick="document.getElementById('qAchFile').click()">
+                                <span style="font-size:2rem;">📷</span>
+                                <p style="color:var(--text-secondary); font-size:0.82rem; margin:0.4rem 0 0;">Click to choose a photo</p>
+                                <input type="file" id="qAchFile" accept="image/*" onchange="previewAchPhoto(this)">
+                            </div>
+                            <img id="achPhotoPreview" class="preview-img" alt="Preview">
+                        </div>
+                        <div style="margin-bottom:1.2rem;">
+                            <label style="display:block; color:var(--text-primary); font-size:0.88rem; margin-bottom:0.4rem;">Description *</label>
+                            <textarea id="qAchDesc" class="form-control" rows="3" placeholder="Describe the achievement..." required style="width:100%; padding:0.7rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:#fff; resize:vertical;"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width:100%;">📤 Publish Achievement</button>
+                        <div id="achSuccessMsg" style="display:none; margin-top:0.8rem; text-align:center; color:#10b981; font-size:0.88rem;">✅ Achievement published to website!</div>
+                    </form>
+                    <!-- Mini Gallery -->
+                    <div>
+                        <h4 style="color:var(--text-primary); margin:0 0 0.5rem; font-size:0.95rem;">Live Gallery Preview <span id="achCountBadge" style="background:rgba(10,54,34,0.5); color:var(--highlight-color); padding:0.1rem 0.6rem; border-radius:20px; font-size:0.8rem; margin-left:0.4rem;">0</span></h4>
+                        <p style="color:var(--text-secondary); font-size:0.82rem; margin:0 0 0.5rem;">These are visible on the public website Achievements section.</p>
+                        <div id="achMiniGallery" class="ach-mini-grid"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Official Security Center Section -->
+            <div class="dashboard-card" style="margin-top: 2.5rem;">
+                <div class="section-label">System Security</div>
+                <h3 style="color: var(--text-primary); margin-bottom: 0.5rem;">Official Security Center</h3>
+                <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 2rem;">Manage the master credentials for the college portal. These are used to login to the Official Panel.</p>
+                
+                <form id="dashSecurityForm" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; align-items: flex-end;">
+                    <div class="form-group" style="margin: 0;">
+                        <label class="form-label" style="color:var(--text-primary); margin-bottom:0.5rem; display:block;">Official Username</label>
+                        <input type="text" id="dashOfficialId" class="form-control" placeholder="Current or New Username" required style="width:100%; padding:0.8rem; border-radius:8px;">
+                    </div>
+                    <div class="form-group" style="margin: 0;">
+                        <label class="form-label" style="color:var(--text-primary); margin-bottom:0.5rem; display:block;">Update Password</label>
+                        <input type="password" id="dashOfficialPass" class="form-control" placeholder="Enter new password" required style="width:100%; padding:0.8rem; border-radius:8px;">
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function loadData() {
+            const tableBody = document.querySelector('#applicationsTable tbody');
+            const data = JSON.parse(localStorage.getItem('noorulHikmaApplications')) || [];
+            
+            document.getElementById('appCount').innerText = `${data.length} total`;
+
+            if(data.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 2rem;">No applications received yet.</td></tr>';
+                return;
+            }
+
+            tableBody.innerHTML = '';
+            // Display newest first
+            [...data].reverse().forEach(app => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${app.date || '-'}</td>
+                    <td style="color: var(--text-primary); font-weight: 500;">${app.fullName || '-'}</td>
+                    <td><span style="background: rgba(10,54,34,0.6); padding: 0.3rem 0.6rem; border-radius: 4px; font-size: 0.85rem;">${app.course || '-'}</span></td>
+                    <td>${app.phone || '-'}</td>
+                    <td>${app.schoolEd || '-'}</td>
+                    <td>${app.madrassaEd || '-'}</td>
+                    <td><button class="btn btn-outline" style="padding:0.3rem 0.8rem; font-size:0.8rem;" onclick="viewDetails(${app.id})">Details</button></td>
+                `;
+                tableBody.appendChild(tr);
+            });
+        }
+
+        function viewDetails(id) {
+            const data = JSON.parse(localStorage.getItem('noorulHikmaApplications')) || [];
+            const app = data.find(a => a.id === id);
+            if(app) {
+                alert(`APPLICANT DETAILS\n\nName: ${app.fullName}\nDOB: ${app.dob}\nPhone: ${app.phone}\nEmail: ${app.email}\nAddress: ${app.address}\n\nPROGRAM INFORMATION\nCourse: ${app.course}\nSchool Ed: ${app.schoolEd}\nMadrassa Ed: ${app.madrassaEd}`);
+            }
+        }
+
+        function clearData() {
+            if(confirm("Are you sure you want to permanently delete all applicant data? This action cannot be undone.")) {
+                localStorage.removeItem('noorulHikmaApplications');
+                loadData();
+            }
+        }
+
+        function exportToCSV() {
+            const data = JSON.parse(localStorage.getItem('noorulHikmaApplications')) || [];
+            if(data.length === 0) {
+                alert('No data to export.');
+                return;
+            }
+            
+            let csv = 'Date,Full Name,DOB,Phone,Email,Address,Program,School Ed,Madrassa Ed\n';
+            data.forEach(app => {
+                let row = [
+                    app.date || '',
+                    `"${(app.fullName || '').replace(/"/g, '""')}"`,
+                    app.dob || '',
+                    `"${(app.phone || '').replace(/"/g, '""')}"`,
+                    app.email || '',
+                    `"${(app.address || '').replace(/"/g, '""')}"`,
+                    `"${(app.course || '').replace(/"/g, '""')}"`,
+                    `"${(app.schoolEd || '').replace(/"/g, '""')}"`,
+                    `"${(app.madrassaEd || '').replace(/"/g, '""')}"`
+                ];
+                csv += row.join(',') + '\n';
+            });
+            
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('hidden', '');
+            a.setAttribute('href', url);
+            a.setAttribute('download', 'Noorul_Hikma_Admissions_Data.csv');
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        // ===== ACHIEVEMENTS SECTION LOGIC =====
+        // Clear old default sample data from localStorage
+        (function clearOldDefaults() {
+            const stored = JSON.parse(localStorage.getItem('noorulHikmaAchievements'));
+            if (stored && stored.some(a => [1,2,3,4].includes(a.id) && !a.isOfficial)) {
+                localStorage.removeItem('noorulHikmaAchievements');
+            }
+        })();
+
+        function loadAchMiniGallery() {
+            const data = JSON.parse(localStorage.getItem('noorulHikmaAchievements')) || [];
+            const gallery = document.getElementById('achMiniGallery');
+            const badge = document.getElementById('achCountBadge');
+            badge.textContent = data.length;
+            if (data.length === 0) {
+                gallery.innerHTML = '<p style="color:#666; font-size:0.85rem; padding:1rem 0;">🏅 No achievements yet. Add your first one!</p>';
+                return;
+            }
+            gallery.innerHTML = data.map(a => `
+                <div class="ach-mini-card">
+                    <button class="ach-del-btn" onclick="deleteAchAdmin(${a.id})">✕ Delete</button>
+                    <img src="${a.image}" class="ach-mini-img" alt="${a.title}" onerror="this.style.display='none'">
+                    <div class="ach-mini-body">
+                        <div class="ach-mini-title">${a.title}</div>
+                        <div class="ach-mini-desc">${a.desc}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function deleteAchAdmin(id) {
+            if (!confirm('Delete this achievement from the website?')) return;
+            let data = JSON.parse(localStorage.getItem('noorulHikmaAchievements')) || [];
+            data = data.filter(a => a.id !== id);
+            localStorage.setItem('noorulHikmaAchievements', JSON.stringify(data));
+            loadAchMiniGallery();
+        }
+
+        function previewAchPhoto(input) {
+            const preview = document.getElementById('achPhotoPreview');
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        document.getElementById('quickAchForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = this.querySelector('button[type="submit"]');
+            btn.textContent = 'Publishing...';
+            btn.disabled = true;
+
+            const title = document.getElementById('qAchTitle').value.trim();
+            const desc = document.getElementById('qAchDesc').value.trim();
+            const fileInput = document.getElementById('qAchFile');
+
+            let imageData = 'https://images.unsplash.com/photo-1606761568499-6d2451b23c66?w=400&auto=format&fit=crop&q=60';
+            if (fileInput.files && fileInput.files[0]) {
+                imageData = await new Promise(resolve => {
+                    const reader = new FileReader();
+                    reader.onload = e => resolve(e.target.result);
+                    reader.readAsDataURL(fileInput.files[0]);
+                });
+            }
+
+            let data = JSON.parse(localStorage.getItem('noorulHikmaAchievements')) || [];
+            data.push({ id: Date.now(), title, desc, image: imageData, isOfficial: true });
+            localStorage.setItem('noorulHikmaAchievements', JSON.stringify(data));
+
+            this.reset();
+            document.getElementById('achPhotoPreview').style.display = 'none';
+            document.getElementById('achSuccessMsg').style.display = 'block';
+            setTimeout(() => document.getElementById('achSuccessMsg').style.display = 'none', 3000);
+            btn.textContent = '📤 Publish Achievement';
+            btn.disabled = false;
+            loadAchMiniGallery();
+        });
+
+        window.onload = function() { loadData(); loadAchMiniGallery(); };
+
+        document.getElementById('officialSettingsForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const newId = document.getElementById('newOfficialId').value.trim();
+            const newPass = document.getElementById('newOfficialPass').value.trim();
+            
+            if(newPass.length < 4) {
+                alert('Password must be at least 4 characters.');
+                return;
+            }
+
+            localStorage.setItem('officialUsername', newId);
+            localStorage.setItem('officialPassword', newPass);
+            
+            alert('Official credentials updated successfully! Use these for your next login.');
+            closeOfficialSettings();
+            // Update the dashboard inputs too
+            document.getElementById('dashOfficialId').value = newId;
+            document.getElementById('dashOfficialPass').value = '';
+        });
+
+        // Initialize and handle Dashboard Security Form
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentId = localStorage.getItem('officialUsername') || 'admin';
+            if (document.getElementById('dashOfficialId')) {
+                document.getElementById('dashOfficialId').value = currentId;
+            }
+        });
+
+        document.getElementById('dashSecurityForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const newId = document.getElementById('dashOfficialId').value.trim();
+            const newPass = document.getElementById('dashOfficialPass').value.trim();
+            
+            if(newPass.length < 4) {
+                alert('Password must be at least 4 characters.');
+                return;
+            }
+
+            localStorage.setItem('officialUsername', newId);
+            localStorage.setItem('officialPassword', newPass);
+            
+            alert('Official credentials updated successfully! These changes are applied immediately.');
+            document.getElementById('dashOfficialPass').value = '';
+        });
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('officialSettingsModal');
+            if (event.target == modal) closeOfficialSettings();
+        }
+    </script>
+
+    <!-- Official Security Modal -->
+    <div id="officialSettingsModal" class="admin-modal">
+        <div class="admin-modal-content">
+            <span class="close-admin-modal" onclick="closeOfficialSettings()">&times;</span>
+            <h2 style="margin-top: 0; color: var(--text-primary);">Official Security</h2>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 2rem;">Update the master username and password for the college portal.</p>
+            <form id="officialSettingsForm">
+                <div class="form-group">
+                    <label class="form-label" style="color:var(--text-primary); margin-bottom:0.5rem; display:block;">New Official ID</label>
+                    <input type="text" id="newOfficialId" class="form-control" placeholder="New Username" required style="width:100%; padding:0.8rem; border-radius:8px;">
+                </div>
+                <div class="form-group" style="margin-top:1.5rem;">
+                    <label class="form-label" style="color:var(--text-primary); margin-bottom:0.5rem; display:block;">New Official Password</label>
+                    <input type="password" id="newOfficialPass" class="form-control" placeholder="Min 4 characters" required style="width:100%; padding:0.8rem; border-radius:8px;">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;">Update Master Credentials</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

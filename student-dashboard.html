@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script>
+        if (localStorage.getItem('studentAuth') !== 'true') {
+            window.location.href = 'student-login.html';
+        }
+        function logout() {
+            localStorage.removeItem('studentAuth');
+            window.location.href = 'student-login.html';
+        }
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard | Noorul Hikma</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .dashboard-section {
+            padding: 120px 2rem 4rem;
+            min-height: 100vh;
+            background-color: var(--bg-primary);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .dash-card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .dash-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            padding: 2px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.4), transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 1rem;
+        }
+
+        .profile-avatar {
+            width: 60px;
+            height: 60px;
+            background: var(--highlight-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--bg-primary);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            background: rgba(10, 54, 34, 0.5);
+            color: var(--highlight-color);
+            font-weight: 500;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            border: 1px solid var(--highlight-color);
+        }
+
+        .upload-area {
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 3rem 2rem;
+            text-align: center;
+            margin-top: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .upload-area:hover {
+            border-color: var(--accent-color);
+            background: rgba(10, 54, 34, 0.1);
+        }
+
+        .upload-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .result-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        .result-table th, .result-table td { padding: 0.8rem; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.9rem; }
+        .result-table th { color: var(--highlight-color); font-weight: 600; }
+        .grade-badge { padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: bold; font-size: 0.8rem; }
+        .grade-a { background: rgba(0, 255, 127, 0.2); color: #00ff7f; }
+        .grade-b { background: rgba(255, 215, 0, 0.2); color: #ffd700; }
+
+        /* Modal Styles */
+        .settings-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 2000; align-items: center; justify-content: center; padding: 1rem; backdrop-filter: blur(5px); }
+        .settings-modal.show { display: flex; }
+        .settings-content { background: var(--bg-secondary); padding: 2.5rem; border-radius: 12px; width: 100%; max-width: 400px; position: relative; border: 1px solid rgba(255,255,255,0.1); }
+        .close-settings { position: absolute; top: 1rem; right: 1.5rem; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary); }
+
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar scrolled">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-text">Noorul <span class="highlight">Hikma</span></span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="#" class="nav-link" onclick="openSettings(); return false;">Account Settings</a></li>
+                <li><a href="#" class="nav-link cta-btn" onclick="logout(); return false;">Secure Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="dashboard-section">
+        <div class="container fade-in-section">
+            <div class="section-title" style="margin-bottom: 0.5rem; text-align: left;">Welcome back, <span
+                    class="highlight-green">Student</span></div>
+            <p style="color: var(--text-secondary);">Manage your admission profile and secure documentation.</p>
+
+            <div class="dashboard-grid">
+
+                <div class="dash-card">
+                    <div class="profile-header">
+                        <div class="profile-avatar" id="stuInitial">S</div>
+                        <div>
+                            <h3 style="margin: 0;" id="stuNameDisplay">Student Applicant</h3>
+                            <p style="color: var(--text-secondary); margin: 0; font-size: 0.9rem;" id="stuIdDisplay">ID: STU-10294</p>
+                        </div>
+                    </div>
+                    <h4>Academic Status</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.95rem; margin-top: 0.5rem;" id="stuCourseDisplay">Your program details will appear here.</p>
+                    <div class="status-badge" id="stuStatus">🟢 Active Student</div>
+
+                    <h4 style="margin-top: 2rem;">Quick Facts</h4>
+                    <ul
+                        style="color: var(--text-secondary); font-size: 0.9rem; padding-left: 1.2rem; margin-top: 0.5rem; line-height: 1.6;">
+                        <li>Applied on: Current Session</li>
+                        <li>Campus: Noorul Hikma </li>
+                        <li>Duration: 8 Years</li>
+                    </ul>
+                </div>
+
+                <div class="dash-card">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 1rem;">
+                        <div style="width: 48px; height: 48px; background: var(--secondary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--bg-primary); font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.2rem;" id="profAvatar">?</div>
+                        <div>
+                            <h3 style="margin: 0;">Verified Student Profile</h3>
+                            <p style="margin: 0; color: var(--text-secondary); font-size: 0.85rem;">Official Academic Identity</p>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-details-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
+                        <div class="detail-item">
+                            <label style="display: block; color: var(--text-secondary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.3rem;">Full Name</label>
+                            <span id="profFullName" style="font-weight: 600; color: var(--text-primary); font-size: 1.1rem;">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <label style="display: block; color: var(--text-secondary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.3rem;">Admission ID</label>
+                            <span id="profAdminId" style="font-weight: 600; color: var(--highlight-color); font-family: 'Courier New', Courier, monospace;">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <label style="display: block; color: var(--text-secondary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.3rem;">Mobile Number</label>
+                            <span id="profMobile" style="font-weight: 500;">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <label style="display: block; color: var(--text-secondary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.3rem;">Date of Birth</label>
+                            <span id="profDob" style="font-weight: 500;">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <label style="display: block; color: var(--text-secondary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.3rem;">Email Address</label>
+                            <span id="profEmail" style="font-weight: 500;">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <label style="display: block; color: var(--text-secondary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.3rem;">Guardian Contact</label>
+                            <span id="profParent" style="font-weight: 500;">-</span>
+                        </div>
+                        <div class="detail-item" style="grid-column: 1 / -1; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1rem;">
+                            <label style="display: block; color: var(--text-secondary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.3rem;">Permanent Address</label>
+                            <span id="profAddress" style="font-size: 0.95rem; line-height: 1.5; color: var(--text-secondary);">-</span>
+                        </div>
+                    </div>
+
+                    <!-- Change Password Section -->
+                    <div style="margin-top: 2rem; border-top: 1px solid rgba(255,255,255,0.07); padding-top: 1.5rem;">
+                        <h4 style="margin-bottom: 1rem; color: var(--text-primary);">🔐 Change My Password</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; align-items: flex-end;">
+                            <div>
+                                <label style="display: block; color: var(--text-secondary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.3rem;">Current Password</label>
+                                <input type="password" id="curPass" class="form-control" placeholder="Enter current password" style="width:100%; padding:0.7rem; background:rgba(255,255,255,0.05); color:#fff; border:1px solid rgba(255,255,255,0.1); border-radius:8px;">
+                            </div>
+                            <div>
+                                <label style="display: block; color: var(--text-secondary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.3rem;">New Password</label>
+                                <input type="password" id="newPass" class="form-control" placeholder="Enter new password" style="width:100%; padding:0.7rem; background:rgba(255,255,255,0.05); color:#fff; border:1px solid rgba(255,255,255,0.1); border-radius:8px;">
+                            </div>
+                            <div>
+                                <button type="button" onclick="changeStudentPassword()" class="btn btn-primary" style="width:100%; padding:0.7rem;">Update Password</button>
+                            </div>
+                        </div>
+                        <div id="passMsg" style="margin-top:0.8rem; font-size:0.85rem; display:none;"></div>
+                    </div>
+                </div>
+
+                <div id="resultsContainer" style="grid-column: 1 / -1; display: flex; flex-direction: column; gap: 2rem;">
+                    <div class="dash-card">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                            <h3 style="margin:0;">Academic Performance</h3>
+                            <span class="status-badge">No results yet</span>
+                        </div>
+                        <table class="result-table">
+                            <tbody>
+                                <tr>
+                                    <td colspan="5" style="text-align: center; padding: 2rem; color: #888;">No results have been uploaded for your profile yet.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Account Settings Modal -->
+    <div id="settingsModal" class="settings-modal">
+        <div class="settings-content dash-card">
+            <span class="close-settings" onclick="closeSettings()">&times;</span>
+            <h2 style="margin-top: 0; color: var(--text-primary);">Account Security</h2>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 2rem;">Update your Admission ID or change your secure portal password.</p>
+            
+            <form id="settingsForm">
+                <div class="form-group">
+                    <label class="form-label" style="color:var(--text-primary); margin-bottom:0.5rem; display:block;">Change Admission ID</label>
+                    <input type="text" id="newAdmissionId" class="form-control" placeholder="New Username" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" style="color:var(--text-primary); margin-bottom:0.5rem; display:block;">New Password</label>
+                    <input type="password" id="newPassword" class="form-control" placeholder="Min 6 characters" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-large" style="width: 100%; margin-top: 1rem;">Update Credentials</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        const fileInputElement = document.getElementById('fileInput');
+        if (fileInputElement) {
+            fileInputElement.addEventListener('change', function (e) {
+                if (this.files && this.files.length > 0) {
+                    const file = this.files[0];
+                    document.getElementById('fileName').innerText = file.name;
+                    document.getElementById('uploadArea').style.borderColor = 'var(--highlight-color)';
+                    document.getElementById('uploadStatus').style.display = 'block';
+
+                    // Mock upload delay
+                    const ogText = document.getElementById('fileName').innerText;
+                    document.getElementById('fileName').innerText = 'Uploading...';
+                    setTimeout(() => {
+                        document.getElementById('fileName').innerText = ogText;
+                        alert('Marklist successfully uploaded and saved to your profile!');
+                    }, 1200);
+                }
+            });
+        }
+        // Settings Logic
+        function openSettings() {
+            // Pre-fill current ID
+            const currentId = localStorage.getItem('studentUsername') || 'student';
+            document.getElementById('newAdmissionId').value = currentId;
+            document.getElementById('settingsModal').classList.add('show');
+        }
+
+        function closeSettings() {
+            document.getElementById('settingsModal').classList.remove('show');
+        }
+
+        document.getElementById('settingsForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const newId = document.getElementById('newAdmissionId').value.trim();
+            const newPass = document.getElementById('newPassword').value.trim();
+            const currentId = localStorage.getItem('studentUsername') || 'student';
+            
+            if(newPass.length < 4) {
+                alert('Password must be at least 4 characters.');
+                return;
+            }
+
+            // Update central students list
+            let students = JSON.parse(localStorage.getItem('noorulHikmaStudents')) || [];
+            const studentIdx = students.findIndex(s => s.adminNo === currentId);
+            
+            if (studentIdx !== -1) {
+                // Check if new ID is already taken by someone else
+                if (newId !== currentId && students.some(s => s.adminNo === newId)) {
+                    alert('This Admission ID is already taken by another student.');
+                    return;
+                }
+                students[studentIdx].adminNo = newId;
+                students[studentIdx].password = newPass;
+                localStorage.setItem('noorulHikmaStudents', JSON.stringify(students));
+            } else if (currentId === 'student') {
+                // Handle legacy/guest account
+                localStorage.setItem('studentPassword', newPass);
+            }
+
+            localStorage.setItem('studentUsername', newId);
+            alert('Credentials updated successfully! Please use these new details for your next login.');
+            closeSettings();
+            window.location.reload();
+        });
+
+        // Close modal on outside click
+        window.onclick = function(event) {
+            const modal = document.getElementById('settingsModal');
+            if (event.target == modal) closeSettings();
+        }
+        // Load Profile & Results 
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentId = localStorage.getItem('studentUsername') || '';
+            const students = JSON.parse(localStorage.getItem('noorulHikmaStudents')) || [];
+            
+            // Case-insensitive lookup to match the stored adminNo safely
+            const student = students.find(s => s.adminNo && currentId && s.adminNo.toLowerCase() === currentId.toLowerCase());
+            
+            if (!student) {
+                // No profile found - show fallback state
+                document.getElementById('stuNameDisplay').innerText = 'Student';
+                document.getElementById('stuIdDisplay').innerText = 'ID: ' + (currentId || 'N/A');
+                document.getElementById('stuInitial').innerText = 'S';
+                document.getElementById('profAvatar').innerText = 'S';
+                document.getElementById('stuCourseDisplay').innerText = 'No profile registered yet.';
+                if (document.getElementById('profFullName')) {
+                    document.getElementById('profFullName').innerText = 'Not registered';
+                    document.getElementById('profAdminId').innerText = currentId || 'N/A';
+                    document.getElementById('profMobile').innerText = 'Contact your college';
+                    document.getElementById('profParent').innerText = 'Contact your college';
+                    document.getElementById('profAddress').innerText = 'No record found. Please ask your college official.';
+                }
+                return;
+            }
+            
+            // Update Profile UI
+            document.getElementById('stuNameDisplay').innerText = student.name;
+            document.getElementById('stuIdDisplay').innerText = `ID: ${student.adminNo}`;
+            document.getElementById('stuInitial').innerText = student.name.charAt(0);
+            document.getElementById('profAvatar').innerText = student.name.charAt(0);
+            document.getElementById('stuCourseDisplay').innerText = `Enrolled in ${student.className || 'General Course'}.`;
+
+            // Update Detailed Profile UI
+            if (document.getElementById('profFullName')) {
+                document.getElementById('profFullName').innerText = student.name;
+                document.getElementById('profAdminId').innerText = student.adminNo;
+                document.getElementById('profMobile').innerText = student.mobile || 'Not Provided';
+                document.getElementById('profDob').innerText = student.dob ? new Date(student.dob).toLocaleDateString('en-IN', {day:'2-digit', month:'long', year:'numeric'}) : 'Not Provided';
+                document.getElementById('profEmail').innerText = student.email || 'Not Provided';
+                document.getElementById('profParent').innerText = student.parentPhone || 'Not Provided';
+                document.getElementById('profAddress').innerText = student.address || 'Address not registered.';
+            }
+
+            // Load Results
+            const allResults = JSON.parse(localStorage.getItem('noorulHikmaResults')) || [];
+            const myResultsList = allResults.filter(r => String(r.studentId) === String(student.id));
+
+            if (myResultsList.length > 0) {
+                const container = document.getElementById('resultsContainer');
+                container.innerHTML = ''; // Clear default message
+                
+                // Sort results by class/year (descending)
+                myResultsList.sort((a,b) => {
+                    const yearA = parseInt(a.class.replace(/\D/g, '')) || 0;
+                    const yearB = parseInt(b.class.replace(/\D/g, '')) || 0;
+                    return yearB - yearA;
+                });
+
+                myResultsList.forEach(myResults => {
+                    const yearCard = document.createElement('div');
+                    yearCard.className = 'dash-card';
+                    
+                    let totalObtained = 0;
+                    let totalMax = 0;
+                    let rowsHtml = '';
+
+                    Object.entries(myResults.marks).forEach(([subject, markData]) => {
+                        const obtained = typeof markData === 'object' ? parseInt(markData.obtained) || 0 : parseInt(markData) || 0;
+                        const maxMark = typeof markData === 'object' ? parseInt(markData.max) || 100 : 100;
+                        const percentage = maxMark > 0 ? (obtained / maxMark) * 100 : 0;
+                        const grade = percentage >= 80 ? 'A+' : (percentage >= 60 ? 'A' : (percentage >= 40 ? 'B' : 'C'));
+                        
+                        rowsHtml += `
+                            <tr>
+                                <td><strong>${subject}</strong></td>
+                                <td>${maxMark}</td>
+                                <td>${obtained}</td>
+                                <td>${percentage.toFixed(1)}%</td>
+                                <td><span class="grade-badge ${percentage >= 60 ? 'grade-a' : 'grade-b'}">${grade}</span></td>
+                            </tr>
+                        `;
+                        totalObtained += obtained;
+                        totalMax += maxMark;
+                    });
+
+                    const avgPercentage = totalMax > 0 ? ((totalObtained / totalMax) * 100).toFixed(1) : 0;
+                    const totalGrade = avgPercentage >= 75 ? 'Distinction' : (avgPercentage >= 40 ? 'Passed' : 'Failed');
+
+                    yearCard.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                            <h3 style="margin:0;">Academic Record: ${myResults.class}</h3>
+                            <span class="status-badge">${myResults.exam}</span>
+                        </div>
+                        <table class="result-table">
+                            <thead>
+                                <tr>
+                                    <th>Subject</th>
+                                    <th>Max Marks</th>
+                                    <th>Obtained</th>
+                                    <th>Percentage</th>
+                                    <th>Grade</th>
+                                </tr>
+                            </thead>
+                            <tbody>${rowsHtml}</tbody>
+                            <tfoot>
+                                <tr style="border-top: 2px solid rgba(255,255,255,0.1);">
+                                    <td colspan="2"><strong>Yearly Aggregate</strong></td>
+                                    <td><strong>${totalObtained}</strong> / ${totalMax}</td>
+                                    <td><strong>${avgPercentage}%</strong></td>
+                                    <td><span class="grade-badge ${avgPercentage >= 40 ? 'grade-a' : 'grade-b'}">${totalGrade}</span></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    `;
+                    container.appendChild(yearCard);
+                });
+            }
+        });
+
+        function changeStudentPassword() {
+            const currentId = localStorage.getItem('studentUsername') || '';
+            const students = JSON.parse(localStorage.getItem('noorulHikmaStudents')) || [];
+            const idx = students.findIndex(s => s.adminNo.toLowerCase() === currentId.toLowerCase());
+            const msgEl = document.getElementById('passMsg');
+            
+            if (idx === -1) {
+                msgEl.style.display = 'block';
+                msgEl.style.color = '#ff6b6b';
+                msgEl.innerText = 'Error: Could not find your account.';
+                return;
+            }
+
+            const curPass = document.getElementById('curPass').value;
+            const newPass = document.getElementById('newPass').value;
+
+            if (curPass !== students[idx].password) {
+                msgEl.style.display = 'block';
+                msgEl.style.color = '#ff6b6b';
+                msgEl.innerText = '❌ Current password is incorrect.';
+                return;
+            }
+            if (newPass.length < 4) {
+                msgEl.style.display = 'block';
+                msgEl.style.color = '#ff6b6b';
+                msgEl.innerText = '❌ New password must be at least 4 characters.';
+                return;
+            }
+
+            students[idx].password = newPass;
+            localStorage.setItem('noorulHikmaStudents', JSON.stringify(students));
+            document.getElementById('curPass').value = '';
+            document.getElementById('newPass').value = '';
+            msgEl.style.display = 'block';
+            msgEl.style.color = '#10b981';
+            msgEl.innerText = '✅ Password updated successfully!';
+        }
+    </script>
+</body>
+
+</html>

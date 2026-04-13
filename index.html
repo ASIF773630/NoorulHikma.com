@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noorul Hikma Shereea Arts College | Home</title>
+    <meta name="description"
+        content="Welcome to Noorul Hikma Shereea Arts College. Excellence in Islamic Studies and Arts education in Kerala, India.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;600;700;800&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* ===== ANNOUNCEMENT TICKER ===== */
+        .announcement-bar {
+            background: linear-gradient(90deg, var(--bg-primary), #0a2a1a, var(--bg-primary));
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+            padding: 0.55rem 0;
+            overflow: hidden;
+            position: relative;
+            z-index: 100;
+        }
+
+        .ticker-wrap {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            overflow: hidden;
+        }
+
+        .ticker-label {
+            background: var(--secondary-color);
+            color: #000;
+            font-weight: 700;
+            font-size: 0.75rem;
+            padding: 0.2rem 0.8rem;
+            border-radius: 3px;
+            white-space: nowrap;
+            margin-right: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .ticker-content {
+            display: flex;
+            animation: ticker 28s linear infinite;
+            white-space: nowrap;
+        }
+
+        .ticker-item {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            padding-right: 3rem;
+        }
+
+        .ticker-item span {
+            color: var(--highlight-color);
+            font-weight: 600;
+            margin-right: 0.4rem;
+        }
+
+        @keyframes ticker {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        /* ===== STATS BAR ===== */
+        .stats-bar {
+            background: rgba(10, 54, 34, 0.9);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+            padding: 1.5rem 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 0.5rem;
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .stat-item:last-child {
+            border-right: none;
+        }
+
+        .stat-number {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--highlight-color);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 0.2rem;
+        }
+
+        /* ===== WHY CHOOSE US ===== */
+        .why-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .why-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .why-card:hover {
+            border-color: rgba(212, 175, 55, 0.3);
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .why-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% 0%, rgba(212, 175, 55, 0.05) 0%, transparent 70%);
+        }
+
+        .why-icon {
+            font-size: 2.5rem;
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        .why-card h4 {
+            font-family: 'Outfit', sans-serif;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-size: 1.05rem;
+        }
+
+        .why-card p {
+            color: var(--text-secondary);
+            font-size: 0.88rem;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* ===== FACULTY SECTION ===== */
+        .faculty-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .faculty-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .faculty-card:hover {
+            border-color: rgba(10, 54, 34, 0.6);
+            transform: translateY(-4px);
+        }
+
+        .faculty-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 1rem;
+            border: 3px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .faculty-name {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .faculty-role {
+            font-size: 0.8rem;
+            color: var(--highlight-color);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .faculty-subject {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 0.4rem;
+        }
+
+        /* ===== NEWS SECTION ===== */
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .news-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            transition: all 0.3s;
+        }
+
+        .news-card:hover {
+            border-color: rgba(212, 175, 55, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .news-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .news-tag {
+            background: rgba(10, 54, 34, 0.4);
+            color: var(--highlight-color);
+            font-size: 0.72rem;
+            font-weight: 600;
+            padding: 0.15rem 0.6rem;
+            border-radius: 20px;
+            border: 1px solid rgba(10, 54, 34, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .news-date {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+
+        .news-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.4;
+        }
+
+        .news-desc {
+            color: var(--text-secondary);
+            font-size: 0.88rem;
+            line-height: 1.6;
+            flex: 1;
+        }
+
+        .news-link {
+            color: var(--highlight-color);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-decoration: none;
+            align-self: flex-start;
+        }
+
+        .news-link:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== EVENTS SECTION ===== */
+        .events-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .event-item {
+            display: flex;
+            gap: 1.5rem;
+            align-items: flex-start;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 1.2rem 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .event-item:hover {
+            border-color: rgba(10, 54, 34, 0.5);
+        }
+
+        .event-date-box {
+            background: linear-gradient(135deg, var(--primary-color), #0a2a1a);
+            border-radius: 8px;
+            padding: 0.6rem 1rem;
+            text-align: center;
+            flex-shrink: 0;
+            min-width: 60px;
+            border: 1px solid rgba(10, 54, 34, 0.6);
+        }
+
+        .event-day {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 800;
+            font-family: 'Outfit', sans-serif;
+            color: var(--highlight-color);
+            line-height: 1;
+        }
+
+        .event-month {
+            display: block;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 0.2rem;
+        }
+
+        .event-info h4 {
+            font-family: 'Outfit', sans-serif;
+            color: var(--text-primary);
+            margin: 0 0 0.3rem;
+        }
+
+        .event-info p {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin: 0;
+        }
+
+        .event-badge {
+            margin-top: 0.4rem;
+            display: inline-block;
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--secondary-color);
+            font-size: 0.75rem;
+            padding: 0.1rem 0.5rem;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        /* ===== GALLERY SECTION ===== */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .gallery-item {
+            border-radius: 10px;
+            overflow: hidden;
+            aspect-ratio: 4/3;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            transition: transform 0.3s;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.03);
+        }
+
+        /* ===== CONTACT SECTION ===== */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .contact-info-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .contact-info-item {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .contact-icon-box {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background: rgba(10, 54, 34, 0.3);
+            border: 1px solid rgba(10, 54, 34, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .contact-info-item h5 {
+            color: var(--text-primary);
+            margin: 0 0 0.2rem;
+            font-size: 0.9rem;
+        }
+
+        .contact-info-item p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        .contact-map {
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.03);
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        /* ===== SOCIAL LINKS ===== */
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: all 0.3s;
+            color: var(--text-secondary);
+        }
+
+        .social-link:hover {
+            background: rgba(10, 54, 34, 0.4);
+            border-color: rgba(10, 54, 34, 0.8);
+            color: var(--highlight-color);
+        }
+
+        /* ===== ENHANCED FOOTER ===== */
+        .footer-enhanced {
+            background: #050d08;
+            border-top: 1px solid rgba(212, 175, 55, 0.15);
+            padding: 4rem 0 2rem;
+        }
+
+        .footer-grid-4 {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 3rem;
+        }
+
+        .footer-bottom-bar {
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .footer-bottom-bar p {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin: 0;
+        }
+
+        /* ===== ARABIC BADGE ===== */
+        .arabic-badge {
+            font-family: 'Amiri', serif;
+            font-size: 1.1rem;
+            color: var(--secondary-color);
+            direction: rtl;
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-grid-4 {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-grid-4 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== ACHIEVEMENTS FRONTPAGE ===== */
+        .frontend-ach-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .front-ach-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .front-ach-card:hover {
+            border-color: rgba(212, 175, 55, 0.3);
+            transform: translateY(-4px);
+        }
+
+        .front-ach-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .front-ach-content {
+            padding: 1.5rem;
+        }
+
+        .front-ach-title {
+            font-family: 'Outfit', sans-serif;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .front-ach-desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ===== ANNOUNCEMENT TICKER ===== -->
+    <div class="announcement-bar">
+        <div class="container">
+            <div class="ticker-wrap">
+                <span class="ticker-label">📢 NEWS</span>
+                <div class="ticker-content">
+                    <span class="ticker-item"><span>NEW!</span> Admissions now open for 2026–27 academic year. Apply
+                        before seats fill.</span>
+                    <span class="ticker-item"><span>EVENT:</span> Annual Quran Recitation Competition — Register before
+                        March 30.</span>
+                    <span class="ticker-item"><span>RESULT:</span> 2025 Final Examination results are now available in
+                        the student portal.</span>
+                    <span class="ticker-item"><span>INFO:</span> College will remain closed on public holidays. Check
+                        the academic calendar.</span>
+                    <!-- Duplicate for seamless loop -->
+                    <span class="ticker-item"><span>NEW!</span> Admissions now open for 2026–27 academic year. Apply
+                        before seats fill.</span>
+                    <span class="ticker-item"><span>EVENT:</span> Annual Quran Recitation Competition — Register before
+                        March 30.</span>
+                    <span class="ticker-item"><span>RESULT:</span> 2025 Final Examination results are now available in
+                        the student portal.</span>
+                    <span class="ticker-item"><span>INFO:</span> College will remain closed on public holidays. Check
+                        the academic calendar.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav id="navbar" class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <span class="logo-text">Noorul <span class="highlight">Hikma</span></span>
+            </a>
+            <div class="menu-toggle" id="mobile-menu">
+                <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home" class="nav-link active">Home</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#programs" class="nav-link">Programs</a></li>
+                <li><a href="achievements.html" class="nav-link">Achievements</a></li>
+                <li><a href="#achievements" class="nav-link">Highlights</a></li>
+                <li><a href="#news" class="nav-link">News</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+                <li><a href="student-login.html" class="nav-link">Student Login</a></li>
+                <li><a href="official-login.html" class="nav-link">Official Login</a></li>
+                <li><a href="admission.html" class="nav-link cta-btn">Apply Now</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ===== HERO ===== -->
+    <header id="home" class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div class="arabic-badge fade-in-section">بسم الله الرحمن الرحيم</div>
+            <div class="badge fade-in-section" style="margin-top:0.8rem;">Est. 2026 · Kaniyapuram, Kerala</div>
+            <h1 class="animate-up delay-1">Empowering Minds <br>with <span class="highlight-gold">Divine
+                    Knowledge</span></h1>
+            <p class="animate-up delay-2">Welcome to Noorul Hikma Shereea Arts College — where rich Islamic traditions
+                meet modern academic excellence in an inspiring, spiritually grounded environment.</p>
+            <div class="hero-buttons animate-up delay-3">
+                <a href="#programs" class="btn btn-primary">Explore Programs</a>
+                <a href="admission.html" class="btn btn-secondary glass-btn">Apply for 2026–27</a>
+            </div>
+        </div>
+        <div class="scroll-indicator fade-in-section delay-4">
+            <span>Scroll</span>
+            <div class="mouse"></div>
+        </div>
+    </header>
+
+    <!-- ===== STATS BAR ===== -->
+    <div class="stats-bar">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-number" data-target="500">0</span>
+                    <span class="stat-label">Students Enrolled</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-target="20">0</span>
+                    <span class="stat-label">Qualified Faculty</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-target="3">0</span>
+                    <span class="stat-label">Academic Programs</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-target="98">0</span>
+                    <span class="stat-label">% Pass Rate</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== ABOUT SECTION ===== -->
+    <section id="about" class="section about-section">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-text fade-in-section">
+                    <div class="section-label">About Our Institution</div>
+                    <h2 class="section-title">Nurturing Leaders of <span class="highlight-green">Tomorrow</span></h2>
+                    <p class="lead-text">At Noorul Hikma Shereea Arts College, we weave the timeless wisdom of Islamic
+                        Shareea with contemporary arts and sciences, producing well-rounded graduates ready to serve
+                        their communities.</p>
+                    <p>Our holistic approach ensures that students are not only academically proficient but also
+                        ethically grounded — ready to face the challenges of the modern world with faith, integrity, and
+                        insight.</p>
+                    <ul class="feature-list">
+                        <li>
+                            <div class="feature-icon">✨</div>
+                            <div>
+                                <h4>Comprehensive Curriculum</h4>
+                                <span>Deep Islamic studies integrated with modern humanities.</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="feature-icon">🕌</div>
+                            <div>
+                                <h4>Spiritual Growth</h4>
+                                <span>Dedicated focus on Tarbiyah and character building.</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="feature-icon">🎓</div>
+                            <div>
+                                <h4>Experienced Scholars</h4>
+                                <span>Taught by qualified scholars with decades of expertise.</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="about-image fade-in-section delay-2">
+                    <div class="image-wrapper">
+                        <div class="decorative-pattern"></div>
+                        <img src="WhatsApp Image 2026-03-26 at 12.14.52 AM.jpeg" alt="Noorul Hikma College"
+                            class="rounded-img" onerror="this.style.display='none'">
+                        <div class="experience-badge">
+                            <span class="number">Excellence</span>
+                            <span class="text">in Education</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Why Choose Us -->
+            <div style="margin-top: 5rem;">
+                <div class="section-label text-center">Our Advantages</div>
+                <h2 class="section-title text-center" style="margin-top:0.5rem;">Why Choose <span
+                        class="highlight-gold">Noorul Hikma?</span></h2>
+                <div class="why-grid">
+                    <div class="why-card fade-in-section delay-1">
+                        <span class="why-icon">📚</span>
+                        <h4>Authentic Islamic Education</h4>
+                        <p>Curriculum rooted in classical Islamic scholarship with rigorous academic standards.</p>
+                    </div>
+                    <div class="why-card fade-in-section delay-2">
+                        <span class="why-icon">🤝</span>
+                        <h4>Community Focus</h4>
+                        <p>Strong network of alumni, scholars, and community leaders who support every graduate.</p>
+                    </div>
+                    <div class="why-card fade-in-section delay-3">
+                        <span class="why-icon">🏆</span>
+                        <h4>Proven Excellence</h4>
+                        <p>Consistently high examination results with 98% pass rate across all programmes.</p>
+                    </div>
+                    <div class="why-card fade-in-section delay-4">
+                        <span class="why-icon">🌍</span>
+                        <h4>Global Perspective</h4>
+                        <p>Preparing students to contribute to a globalised world with strong Islamic values.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== PROGRAMS SECTION ===== -->
+    <section id="programs" class="section programs-section alt-bg">
+        <div class="container">
+            <div class="section-header text-center fade-in-section">
+                <div class="section-label">Academics</div>
+                <h2 class="section-title">Explore Our <span class="highlight-gold">Programs</span></h2>
+                <p>Diverse, purpose-driven courses designed to build deep expertise and a purposeful life.</p>
+            </div>
+            <div class="programs-grid" style="display:flex; flex-wrap:wrap; justify-content:center; gap:2rem;">
+                <!-- <div class="program-card fade-in-section delay-1 featured-card">
+                    <div class="card-glow"></div>
+                    <div class="badge-featured">Popular</div>
+                    <div class="card-icon">📚</div>
+                    <h3>Faizy Course</h3>
+                    <p>An advanced Islamic studies programme focusing on Arabic, theology, and Islamic jurisprudence.
+                        Prepares students with knowledge, discipline, and leadership for serving the community.</p>
+                    <div
+                        style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+                        <a href="#" class="read-more" data-modal="faizy-modal">Learn more <span>→</span></a>
+                        <a href="admission.html" class="btn btn-primary"
+                            style="padding:0.4rem 1rem; font-size:0.85rem;">Apply Now</a>
+                    </div>
+                </div> -->
+                <div class="program-card fade-in-section delay-2 featured-card"
+                    style="max-width:380px; flex:0 1 380px;">
+                    <div class="card-glow"></div>
+                    <div class="badge-featured">Popular</div>
+                    <div class="card-icon">📖</div>
+                    <h3>Daras System</h3>
+                    <p>A balanced education system combining Arabic studies, Islamic learning, and cultural values
+                        alongside regular school education to ensure students grow in both knowledge and moral
+                        foundations.</p>
+                    <div
+                        style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+                        <a href="#" class="read-more" data-modal="daras-modal">Learn more <span>→</span></a>
+                        <a href="admission.html" class="btn btn-primary"
+                            style="padding:0.4rem 1rem; font-size:0.85rem;">Apply Now</a>
+                    </div>
+                </div>
+                <div class="program-card fade-in-section delay-3 featured-card"
+                    style="max-width:380px; flex:0 1 380px;">
+                    <div class="card-glow"></div>
+                    <div class="badge-featured">Popular</div>
+                    <div class="card-icon">🎓</div>
+                    <h3>Quran Hifz System</h3>
+                    <p>A dedicated programme for memorising the Quran with proper Tajweed, regular revision, and
+                        guidance from experienced teachers — instilling discipline and a lifelong connection with the
+                        Quran.</p>
+                    <div
+                        style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+                        <a href="#" class="read-more" data-modal="hifz-modal">Learn more <span>→</span></a>
+                        <a href="admission.html" class="btn btn-primary"
+                            style="padding:0.4rem 1rem; font-size:0.85rem;">Apply Now</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admission Eligibility Bar -->
+            <div
+                style="margin-top:3rem; background:rgba(10,54,34,0.2); border:1px solid rgba(10,54,34,0.4); border-radius:12px; padding:1.5rem 2rem; display:flex; align-items:center; gap:1.5rem; flex-wrap:wrap;">
+                <div style="font-size:2rem;">📋</div>
+                <div>
+                    <h4 style="color:var(--text-primary); margin-bottom:0.3rem;">Admission Eligibility</h4>
+                    <p style="color:var(--text-secondary); margin:0; font-size:0.9rem;">Students who have completed
+                        <strong style="color:var(--highlight-color);">7th class in School</strong> and <strong
+                            style="color:var(--highlight-color);">5th class in Madrassa</strong> are eligible to apply.
+                    </p>
+                </div>
+                <a href="admission.html" class="btn btn-primary" style="margin-left:auto;">Apply for Admission →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FACULTY SECTION ===== -->
+    <section class="section about-section" id="faculty">
+        <div class="container">
+            <div class="section-header text-center fade-in-section">
+                <div class="section-label">Our Team</div>
+                <h2 class="section-title">Meet Our <span class="highlight-green">Faculty</span></h2>
+                <p>Guided by experienced scholars and educators committed to your academic and spiritual growth.</p>
+            </div>
+            <div class="faculty-grid">
+                <div class="faculty-card fade-in-section delay-1">
+                    <div class="faculty-avatar">👨‍🏫</div>
+                    <div class="faculty-name">Ustad S.A Shajahan Darimi Panavoor </div>
+                    <div class="faculty-role">Principal</div>
+                    <div class="faculty-subject">samastha kerala jammiyathul ulama district precident & Arabic
+                        Literature & Grammar </div>
+                </div>
+                <div class="faculty-card fade-in-section delay-2">
+                    <div class="faculty-avatar">👨‍🎓</div>
+                    <div class="faculty-name">Usthad Shajahan Kashifi karuva</div>
+                    <div class="faculty-role">Senior Lecturer</div>
+                    <div class="faculty-subject">Quranic Exegesis (Tafseer) & Arabic Literature & Grammar</div>
+                </div>
+                <div class="faculty-card fade-in-section delay-3">
+                    <div class="faculty-avatar">👩‍🏫</div>
+                    <div class="faculty-name">Usthad Husain Hishami kilimanoor</div>
+                    <div class="faculty-role"> Senior Lecturer</div>
+                    <div class="faculty-subject">Quranic Exegesis (Tafseer) &Arabic Literature & Grammar</div>
+                </div>
+                <div class="faculty-card fade-in-section delay-4">
+                    <div class="faculty-avatar">👨‍🎓</div>
+                    <div class="faculty-name">Usthad Shereef Nizami Velloor</div>
+                    <div class="faculty-role">Coordinator & Lecturer</div>
+                    <div class="faculty-subject">Arabic Literature & Grammar : Higher Secondary Schoole teacher</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== ACHIEVEMENTS SECTION ===== -->
+    <section id="achievements" class="section">
+        <div class="container">
+            <div class="section-header text-center fade-in-section">
+                <div class="section-label">Our Pride</div>
+                <h2 class="section-title">College <span class="highlight-gold">Achievements</span></h2>
+                <p>Celebrating the outstanding accomplishments of our students and the institution.</p>
+            </div>
+            <div id="frontendAchGallery" class="frontend-ach-grid fade-in-section delay-1">
+                <!-- Achievements dynamically loaded here by script -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== NEWS & EVENTS SECTION ===== -->
+    <section id="news" class="section programs-section alt-bg">
+        <div class="container">
+            <div style="display:grid; grid-template-columns:1.5fr 1fr; gap:3rem; align-items:start;"
+                class="news-events-grid">
+                <!-- News -->
+                <div>
+                    <div class="section-label">Latest</div>
+                    <h2 class="section-title">News & <span class="highlight-gold">Announcements</span></h2>
+                    <div class="news-grid" style="grid-template-columns:1fr; margin-top:2rem;">
+                        <div class="news-card fade-in-section delay-1">
+                            <div class="news-meta">
+                                <span class="news-tag">Admission</span>
+                                <span class="news-date">March 26, 2026</span>
+                            </div>
+                            <div class="news-title">2026–27 Admissions Now Open — Limited Seats Available</div>
+                            <div class="news-desc">Applications are now being accepted for all three programmes for the
+                                upcoming academic year. Early applicants receive priority placement.</div>
+                            <a href="admission.html" class="news-link">Apply Now →</a>
+                        </div>
+                        <div class="news-card fade-in-section delay-2">
+                            <div class="news-meta">
+                                <span class="news-tag">Results</span>
+                                <span class="news-date">March 20, 2026</span>
+                            </div>
+                            <div class="news-title">2025 Final Examination Results Published</div>
+                            <div class="news-desc">Final examination results for all Year 1–12 students are now
+                                available on the student portal. Login with your Admission ID to view your marks.</div>
+                            <a href="student-login.html" class="news-link">View Results →</a>
+                        </div>
+                        <div class="news-card fade-in-section delay-3">
+                            <div class="news-meta">
+                                <span class="news-tag">Achievement</span>
+                                <span class="news-date">March 10, 2026</span>
+                            </div>
+                            <div class="news-title">Noorul Hikma Students Win District-Level Quran Competition</div>
+                            <div class="news-desc">Three of our Hifz students secured top positions at the
+                                district-level Quran recitation competition, bringing honour to the college.</div>
+                            <a href="#" class="news-link">Read More →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Events -->
+                <div>
+                    <div class="section-label">Schedule</div>
+                    <h2 class="section-title">Upcoming <span class="highlight-green">Events</span></h2>
+                    <div class="events-list">
+                        <div class="event-item fade-in-section delay-1">
+                            <div class="event-date-box">
+                                <span class="event-day">30</span>
+                                <span class="event-month">Mar</span>
+                            </div>
+                            <div class="event-info">
+                                <h4>Quran Recitation Competition</h4>
+                                <p>Open to all enrolled students. Categories: Hifz, Tajweed & Translation.</p>
+                                <span class="event-badge">On Campus</span>
+                            </div>
+                        </div>
+                        <div class="event-item fade-in-section delay-2">
+                            <div class="event-date-box">
+                                <span class="event-day">05</span>
+                                <span class="event-month">Apr</span>
+                            </div>
+                            <div class="event-info">
+                                <h4>New Student Orientation Day</h4>
+                                <p>Welcome programme for all newly admitted students and their guardians.</p>
+                                <span class="event-badge">Mandatory</span>
+                            </div>
+                        </div>
+                        <div class="event-item fade-in-section delay-3">
+                            <div class="event-date-box">
+                                <span class="event-day">15</span>
+                                <span class="event-month">Apr</span>
+                            </div>
+                            <div class="event-info">
+                                <h4>Mid-Term Examinations Begin</h4>
+                                <p>All Year 1–12 students must report to their assigned examination halls.</p>
+                                <span class="event-badge">Academic</span>
+                            </div>
+                        </div>
+                        <div class="event-item fade-in-section delay-4">
+                            <div class="event-date-box">
+                                <span class="event-day">01</span>
+                                <span class="event-month">May</span>
+                            </div>
+                            <div class="event-info">
+                                <h4>Annual Cultural & Arts Gathering</h4>
+                                <p>Showcasing student talent in Islamic poetry, calligraphy, and debate.</p>
+                                <span class="event-badge">Festival</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== ADMISSIONS CTA ===== -->
+    <section id="admissions" class="cta-section fade-in-section">
+        <div class="cta-overlay"></div>
+        <div class="cta-container">
+            <h2 class="animate-up">Ready to Join Our Community?</h2>
+            <p class="animate-up delay-1">Admissions are open for students who have completed <strong>7th class in
+                    School</strong> and <strong>5th class in Madrassa</strong>. Start your transformative journey with
+                Noorul Hikma today.</p>
+            <div class="cta-buttons animate-up delay-2">
+                <a href="admission.html" class="btn btn-primary btn-large">Apply for Admission</a>
+                <a href="#contact" class="btn btn-outline-white">Get in Touch</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CONTACT SECTION ===== -->
+    <section id="contact" class="section about-section">
+        <div class="container">
+            <div class="section-header text-center fade-in-section">
+                <div class="section-label">Reach Us</div>
+                <h2 class="section-title">Get in <span class="highlight-gold">Touch</span></h2>
+                <p>We welcome your enquiries about admissions, programmes, and campus life.</p>
+            </div>
+            <div class="contact-grid">
+                <div class="contact-info-list">
+                    <div class="contact-info-item fade-in-section delay-1">
+                        <div class="contact-icon-box">📍</div>
+                        <div>
+                            <h5>Campus Address</h5>
+                            <p>Noorul Hikma Campus,<br>Kaniyapuram, Masthanmukku,<br>Kerala, India — 695301</p>
+                        </div>
+                    </div>
+                    <div class="contact-info-item fade-in-section delay-2">
+                        <div class="contact-icon-box">📞</div>
+                        <div>
+                            <h5>Phone Number</h5>
+                            <p>+91 98955 12379</p>
+                        </div>
+                    </div>
+                    <div class="contact-info-item fade-in-section delay-3">
+                        <div class="contact-icon-box">✉️</div>
+                        <div>
+                            <h5>Email Address</h5>
+                            <p>noorulhikmah1@gmail.com</p>
+                        </div>
+                    </div>
+                    <div class="contact-info-item fade-in-section delay-4">
+                        <div class="contact-icon-box">⏰</div>
+                        <div>
+                            <h5>Office Hours</h5>
+                            <p>Sunday to Friday<br>8:00 AM – 5:00 PM</p>
+                        </div>
+                    </div>
+                    <div>
+                        <h5
+                            style="color:var(--text-secondary); font-size:0.85rem; text-transform:uppercase; letter-spacing:1px; margin-bottom:0.8rem;">
+                            Follow Us</h5>
+                        <div class="social-links">
+                            <a class="social-link" href="#" title="WhatsApp">💬</a>
+                            <a class="social-link" href="#" title="Facebook">📘</a>
+                            <a class="social-link" href="#" title="Instagram">📷</a>
+                            <a class="social-link" href="#" title="YouTube">▶️</a>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="contact-map fade-in-section delay-2">
+                        <span style="font-size:3rem;">🗺️</span>
+                        <p style="margin:0; font-size:0.9rem;">Kaniyapuram, Masthanmukku, Kerala</p>
+                        <a href="https://maps.google.com/?q=Kaniyapuram,Kerala" target="_blank" class="btn btn-outline"
+                            style="margin-top:1rem; font-size:0.85rem; padding:0.5rem 1.2rem;">Open in Google Maps ↗</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer-enhanced">
+        <div class="container">
+            <div class="footer-grid-4">
+                <div>
+                    <h3 style="font-family:'Outfit',sans-serif; font-size:1.5rem; margin-bottom:0.3rem;">Noorul <span
+                            style="color:var(--secondary-color);">Hikma</span></h3>
+                    <p style="color:var(--text-secondary); font-size:0.85rem; margin-bottom:1rem;">Shereea Arts College
+                        · Kaniyapuram, Kerala</p>
+                    <p style="color:var(--text-secondary); font-size:0.88rem; line-height:1.7;">Illuminating minds with
+                        divine wisdom and modern knowledge to shape balanced and visionary leaders of the community.</p>
+                    <div class="social-links">
+                        <a class="social-link" href="#" title="WhatsApp">💬</a>
+                        <a class="social-link" href="#" title="Facebook">📘</a>
+                        <a class="social-link" href="#" title="Instagram">📷</a>
+                        <a class="social-link" href="#" title="YouTube">▶️</a>
+                    </div>
+                </div>
+                <div>
+                    <h4 style="color:var(--text-primary); margin-bottom:1rem; font-family:'Outfit',sans-serif;">Quick
+                        Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#programs">Programmes</a></li>
+                        <li><a href="#news">News & Events</a></li>
+                        <li><a href="#contact">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="color:var(--text-primary); margin-bottom:1rem; font-family:'Outfit',sans-serif;">Student
+                        Portal</h4>
+                    <ul class="footer-links">
+                        <li><a href="student-login.html">Student Login</a></li>
+                        <li><a href="admission.html">Online Admission</a></li>
+                        <li><a href="official-login.html" style="color:var(--highlight-color);">Official Login</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="color:var(--text-primary); margin-bottom:1rem; font-family:'Outfit',sans-serif;">Contact
+                    </h4>
+                    <ul class="footer-links">
+                        <li style="color:var(--text-secondary); font-size:0.88rem;">📍 Kaniyapuram, Kerala</li>
+                        <li><a href="tel:+919895512379" style="font-size:0.88rem;">📞 +91 98955 12379</a></li>
+                        <li><a href="mailto:noorulhikmah1@gmail.com" style="font-size:0.88rem;">✉️
+                                noorulhikmah1@gmail.com</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom-bar">
+                <p>© 2026 Noorul Hikma Shereea Arts College. All rights reserved.</p>
+                <p style="color:var(--text-secondary);">Designed with ❤️ for the Community</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===== MODALS ===== -->
+    <div id="faizy-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="modal-body">
+                <h3>Faizy Course</h3>
+                <h4 class="highlight-green">Comprehensive Islamic Scholarship</h4>
+                <p>The Faizy course is a flagship programme designed to produce profoundly knowledgeable Islamic
+                    scholars and leaders who can guide the community effectively.</p>
+                <ul>
+                    <li><strong>Curriculum:</strong> Deep focus on Tafseer, Hadith, Fiqh, Aqeedah, and Arabic
+                        Literature.</li>
+                    <li><strong>Career Path:</strong> Graduates become Khatibs, religious scholars, teachers, and
+                        community leaders.</li>
+                    <li><strong>Skill Development:</strong> Leadership, public speaking, academic research, and
+                        spiritual discipline.</li>
+                </ul>
+                <a href="admission.html" class="btn btn-primary mt-3">Apply Now</a>
+            </div>
+        </div>
+    </div>
+    <div id="daras-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="modal-body">
+                <h3>Daras System</h3>
+                <h4 class="highlight-green">Traditional Learning Meets Modernity</h4>
+                <p>The Daras System offers a robust, residential learning environment that carefully balances classical
+                    Arabic and Islamic studies alongside regular school education.</p>
+                <ul>
+                    <li><strong>Structure:</strong> Study circles traditionally held inside mosques or specialised
+                        classrooms with close mentorship.</li>
+                    <li><strong>Outcome:</strong> Ensures students do not miss mainstream academics while absorbing deep
+                        Islamic values.</li>
+                    <li><strong>Advantage:</strong> Cultivates incredibly strong moral foundations and ethical
+                        perspectives in youth.</li>
+                </ul>
+                <a href="admission.html" class="btn btn-primary mt-3">Apply Now</a>
+            </div>
+        </div>
+    </div>
+    <div id="hifz-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="modal-body">
+                <h3>Quran Hifz System</h3>
+                <h4 class="highlight-green">Preserving the Divine Words</h4>
+                <p>Our dedicated Quran Hifz programme guides students in fully memorising the Holy Quran under the
+                    supervision of highly qualified and experienced teachers.</p>
+                <ul>
+                    <li><strong>Methodology:</strong> Systematic daily memorisation with stringent regular revision
+                        schedules.</li>
+                    <li><strong>Tajweed:</strong> Heavy emphasis on perfect pronunciation and rules of recitation.</li>
+                    <li><strong>Spiritual Growth:</strong> Instills immense discipline, focus, and a lifelong spiritual
+                        connection with the Quran.</li>
+                </ul>
+                <a href="admission.html" class="btn btn-primary mt-3">Apply Now</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Animated counter
+        function animateCounters() {
+            document.querySelectorAll('.stat-number[data-target]').forEach(el => {
+                const target = parseInt(el.getAttribute('data-target'));
+                let current = 0;
+                const step = Math.ceil(target / 60);
+                const timer = setInterval(() => {
+                    current = Math.min(current + step, target);
+                    el.textContent = current + (target >= 98 ? '%' : '+');
+                    if (current >= target) clearInterval(timer);
+                }, 25);
+            });
+        }
+        // Trigger when stats bar enters view
+        const statsBar = document.querySelector('.stats-bar');
+        const statsObserver = new IntersectionObserver(entries => {
+            if (entries[0].isIntersecting) { animateCounters(); statsObserver.disconnect(); }
+        }, { threshold: 0.5 });
+        if (statsBar) statsObserver.observe(statsBar);
+
+        // Responsive news-events grid fix
+        const neGrid = document.querySelector('.news-events-grid');
+        if (neGrid && window.innerWidth < 900) {
+            neGrid.style.gridTemplateColumns = '1fr';
+        }
+
+        // Load Dynamic Achievements — only show officially uploaded ones
+        // Clear any old default sample data first
+        (function () {
+            const stored = JSON.parse(localStorage.getItem('noorulHikmaAchievements'));
+            if (stored && stored.some(a => [1, 2, 3, 4, 5, 6].includes(a.id) && !a.isOfficial)) {
+                localStorage.removeItem('noorulHikmaAchievements');
+            }
+        })();
+
+        const achData = JSON.parse(localStorage.getItem('noorulHikmaAchievements')) || [];
+        const frontendAchGallery = document.getElementById('frontendAchGallery');
+        if (frontendAchGallery) {
+            if (achData.length === 0) {
+                frontendAchGallery.innerHTML = `
+                    <div style="grid-column:1/-1; text-align:center; padding:3rem; color:var(--text-secondary);">
+                        <div style="font-size:3rem;">🏅</div>
+                        <p style="margin:0.8rem 0 1.2rem;">No achievements published yet.</p>
+                        <a href="achievements.html" class="btn btn-outline" style="font-size:0.9rem;">View Achievements Gallery</a>
+                    </div>`;
+            } else {
+                frontendAchGallery.innerHTML = achData.map(a => `
+                    <div class="front-ach-card">
+                        <img src="${a.image}" alt="${a.title}" class="front-ach-img" onerror="this.style.display='none'">
+                        <div class="front-ach-content">
+                            <h4 class="front-ach-title">${a.title}</h4>
+                            <p class="front-ach-desc">${a.desc}</p>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+    </script>
+</body>
+
+</html>

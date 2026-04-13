@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+        // Security Check: If unauthenticated, redirect to official login
+        if (localStorage.getItem('officialAuth') !== 'true') {
+            window.location.href = 'official-login.html';
+        }
+
+        function logout() {
+            localStorage.removeItem('officialAuth');
+            window.location.href = 'official-login.html';
+        }
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management | Official Dashboard</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .admin-section { padding: 120px 2rem 4rem; min-height: 100vh; background-color: var(--bg-primary); }
+        .dashboard-card { background: var(--bg-secondary); border-radius: 12px; padding: 2rem; box-shadow: 0 4px 20px rgba(0,0,0,0.2); overflow-x: auto; position: relative;}
+        .dashboard-card::before { content: ''; position: absolute; inset: 0; padding: 2px; border-radius: 12px; background: linear-gradient(135deg, rgba(212, 175, 55, 0.4), transparent); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); mask-composite: exclude; pointer-events: none; }
+        
+        .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+        .data-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        .data-table th, .data-table td { padding: 1rem; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); color: var(--text-secondary); vertical-align: middle; }
+        .data-table th { color: var(--text-primary); font-weight: 600; background: rgba(10, 54, 34, 0.5); }
+        .data-table tr:hover { background: rgba(255,255,255,0.02); }
+        .student-photo { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-color); }
+        
+        .admin-nav { display: flex; gap: 1rem; margin-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem; }
+        .admin-nav a { color: var(--text-secondary); font-weight: 500; padding: 0.5rem 1rem; border-radius: 6px; transition: var(--transition); }
+        .admin-nav a:hover { background: rgba(255,255,255,0.05); color: var(--text-primary); }
+        .admin-nav a.active { background: var(--primary-color); color: white; }
+
+        /* Modal Styles */
+        .admin-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; padding: 1rem; }
+        .admin-modal.show { display: flex; }
+        .admin-modal-content { background: var(--bg-alt); padding: 2rem; border-radius: 12px; width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; position: relative; }
+        .close-admin-modal { position: absolute; top: 1rem; right: 1.5rem; font-size: 1.5rem; cursor: pointer; color: var(--text-main); }
+        .modal-title { font-family: var(--font-heading); color: var(--primary-dark); font-size: 1.5rem; margin-bottom: 1.5rem; }
+        
+        .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .form-group { margin-bottom: 1rem; }
+        .form-label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-primary); font-size: 0.9rem; }
+        .form-control {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid rgba(255,255,255,0.15) !important;
+            border-radius: 8px;
+            font-family: var(--font-body);
+            background: rgba(255,255,255,0.07) !important;
+            color: #ffffff !important;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: rgba(212,175,55,0.6) !important;
+            background: rgba(255,255,255,0.1) !important;
+            box-shadow: 0 0 0 3px rgba(212,175,55,0.1);
+        }
+        .form-control::placeholder { color: rgba(255,255,255,0.35); }
+        .form-control option { background: #1a1a1a; color: #fff; }
+        .full-width { grid-column: 1 / -1; }
+        
+        .action-btn { padding: 0.3rem 0.6rem; font-size: 0.85rem; margin-right: 0.5rem; cursor: pointer; border-radius: 4px; }
+        .edit-btn { background: var(--secondary-color); color: var(--primary-dark); border: none; }
+        .delete-btn { background: transparent; border: 1px solid #ff4d4d; color: #ff4d4d; }
+        .delete-btn:hover { background: #ff4d4d; color: white; }
+
+        /* Photo Upload Zone */
+        .photo-upload-zone {
+            display: flex; align-items: center; gap: 1.5rem;
+        }
+        .photo-preview-circle {
+            width: 90px; height: 90px; border-radius: 50%;
+            border: 3px dashed rgba(212,175,55,0.5);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2rem; flex-shrink: 0; overflow: hidden;
+            background: rgba(255,255,255,0.03); cursor: pointer;
+            transition: border-color 0.3s;
+        }
+        .photo-preview-circle:hover { border-color: var(--highlight-color); }
+        .photo-preview-circle img { width: 100%; height: 100%; object-fit: cover; }
+        .photo-upload-right { flex: 1; }
+        .photo-drop-zone {
+            border: 2px dashed rgba(255,255,255,0.12); border-radius: 10px;
+            padding: 1rem; text-align: center; cursor: pointer;
+            transition: all 0.3s; background: rgba(255,255,255,0.02);
+        }
+        .photo-drop-zone:hover, .photo-drop-zone.dragover {
+            border-color: rgba(212,175,55,0.6); background: rgba(212,175,55,0.05);
+        }
+        #photoFile { display: none; }
+    </style>
+</head>
+<body>
+    <nav class="navbar scrolled">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-text">Noorul <span class="highlight">Hikma</span></span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="admin.html" class="nav-link">Official Panel</a></li>
+                <li><a href="#" class="nav-link cta-btn" onclick="logout(); return false;">Secure Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="admin-section">
+        <div class="container">
+            <div class="section-title" style="margin-bottom: 1rem; text-align: left;">Official <span class="highlight-green">Dashboard</span></div>
+            
+            <div class="admin-nav">
+                <a href="admin.html">Admission Applications</a>
+                <a href="students-management.html" class="active">Student Management</a>
+                <a href="results-management.html">Results Management</a>
+                <a href="achievements-management.html">Achievements Updates</a>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="header-actions">
+                    <h3 style="color: var(--text-primary); margin:0;">Currently Studying Students</h3>
+                    <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                        <select id="classFilter" class="form-control" style="width: 150px; padding: 0.5rem;" onchange="loadStudents()">
+                            <option value="All">All Classes</option>
+                            <option value="Year 1">Year 1</option>
+                            <option value="Year 2">Year 2</option>
+                            <option value="Year 3">Year 3</option>
+                            <option value="Year 4">Year 4</option>
+                            <option value="Year 5">Year 5</option>
+                            <option value="Year 6">Year 6</option>
+                            <option value="Year 7">Year 7</option>
+                            <option value="Year 8">Year 8</option>
+                            <option value="Year 9">Year 9</option>
+                            <option value="Year 10">Year 10</option>
+                            <option value="Year 11">Year 11</option>
+                            <option value="Year 12">Year 12</option>
+                        </select>
+                        <input type="text" id="stuSearch" class="form-control" placeholder="Search by name..." style="width: 250px; padding: 0.5rem 1rem;" onkeyup="loadStudents()">
+                        <button class="btn btn-outline" onclick="exportStudentsCSV()">⬇ Export CSV</button>
+                        <button class="btn btn-primary" onclick="openModal()">+ Add New Student</button>
+                    </div>
+                </div>
+                
+                <table class="data-table" id="studentsTable">
+                    <thead>
+                        <tr>
+                            <th>Photo</th>
+                            <th>Name</th>
+                            <th>Admission No</th>
+                            <th>Course Year</th>
+                            <th>Mobile</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Data populated by JS -->
+                    </tbody>
+                </table>
+                <div id="noDataMsg" style="display: none; text-align: center; padding: 2rem; color: var(--text-secondary);">No students added yet. Click 'Add New Student' to begin.</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Add/Edit Student Modal -->
+    <div id="studentModal" class="admin-modal">
+        <div class="admin-modal-content">
+            <span class="close-admin-modal" onclick="closeModal()">&times;</span>
+            <h2 class="modal-title" id="modalTitle">Add New Student</h2>
+            <form id="studentForm">
+                <input type="hidden" id="studentId">
+                <div class="form-grid-2">
+                    <div class="form-group full-width">
+                        <label class="form-label">Student Photo</label>
+                        <div class="photo-upload-zone">
+                            <!-- Circular preview -->
+                            <div class="photo-preview-circle" id="photoCircle" onclick="document.getElementById('photoFile').click()" title="Click to upload">
+                                <span id="photoCircleIcon">📷</span>
+                            </div>
+                            <!-- Drop zone + URL -->
+                            <div class="photo-upload-right">
+                                <div class="photo-drop-zone" id="photoDropZone" onclick="document.getElementById('photoFile').click()">
+                                    <div style="font-size:1.5rem;">⬆️</div>
+                                    <p style="margin:0.3rem 0 0; color:var(--text-secondary); font-size:0.82rem;">Click to browse or drag & drop a photo</p>
+                                    <p style="margin:0.2rem 0 0; color:#555; font-size:0.75rem;">JPG, PNG, WEBP supported</p>
+                                </div>
+                                <div style="display:flex; align-items:center; gap:0.5rem; margin-top:0.7rem;">
+                                    <span style="color:#666; font-size:0.78rem; white-space:nowrap;">Or paste URL:</span>
+                                    <input type="text" id="photoUrl" class="form-control" placeholder="https://..." style="flex:1; padding:0.5rem; font-size:0.85rem;" oninput="previewFromUrl(this.value)">
+                                </div>
+                            </div>
+                        </div>
+                        <input type="file" id="photoFile" accept="image/*" onchange="handlePhotoFile(this)">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Full Name *</label>
+                        <input type="text" id="stuName" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Course Year *</label>
+                        <select id="stuClass" class="form-control" required>
+                            <option value="" disabled selected>Select Year</option>
+                            <option value="Year 1">Year 1</option>
+                            <option value="Year 2">Year 2</option>
+                            <option value="Year 3">Year 3</option>
+                            <option value="Year 4">Year 4</option>
+                            <option value="Year 5">Year 5</option>
+                            <option value="Year 6">Year 6</option>
+                            <option value="Year 7">Year 7</option>
+                            <option value="Year 8">Year 8</option>
+                            <option value="Year 9">Year 9</option>
+                            <option value="Year 10">Year 10</option>
+                            <option value="Year 11">Year 11</option>
+                            <option value="Year 12">Year 12</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Admission ID (Username) *</label>
+                        <input type="text" id="stuAdminNo" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Student Mobile *</label>
+                        <input type="tel" id="stuMobile" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Date of Birth</label>
+                        <input type="date" id="stuDob" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" id="stuEmail" class="form-control" placeholder="student@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Parent's Phone Number *</label>
+                        <input type="tel" id="stuParentPhone" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Student Login Password * (Default: 1234)</label>
+                        <input type="password" id="stuPassword" class="form-control" placeholder="1234" required>
+                    </div>
+                    <div class="form-group full-width">
+                        <label class="form-label">Full Address *</label>
+                        <textarea id="stuAddress" class="form-control" rows="3" required></textarea>
+                    </div>
+                </div>
+                <div style="margin-top: 1.5rem; text-align: right;">
+                    <button type="button" class="btn btn-outline" style="border-color: #999; color: #666; margin-right: 1rem;" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Student</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Use a default avatar if none provided
+        const defaultAvatar = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="%230A3622" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>';
+        
+        let students = JSON.parse(localStorage.getItem('noorulHikmaStudents')) || [];
+
+        // ===== PHOTO UPLOAD HELPERS =====
+        function setCirclePreview(src) {
+            const circle = document.getElementById('photoCircle');
+            const icon = document.getElementById('photoCircleIcon');
+            if (src) {
+                circle.innerHTML = `<img src="${src}" alt="Preview" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+            } else {
+                circle.innerHTML = '<span id="photoCircleIcon">📷</span>';
+            }
+        }
+
+        function handlePhotoFile(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    setCirclePreview(e.target.result);
+                    document.getElementById('photoUrl').value = '';
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function previewFromUrl(url) {
+            if (url.startsWith('http') || url.startsWith('data:')) {
+                setCirclePreview(url);
+                document.getElementById('photoFile').value = '';
+            }
+        }
+
+        // Drag & drop
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropZone = document.getElementById('photoDropZone');
+            if (!dropZone) return;
+            ['dragenter','dragover'].forEach(e => {
+                dropZone.addEventListener(e, ev => { ev.preventDefault(); dropZone.classList.add('dragover'); });
+            });
+            ['dragleave','drop'].forEach(e => {
+                dropZone.addEventListener(e, ev => { ev.preventDefault(); dropZone.classList.remove('dragover'); });
+            });
+            dropZone.addEventListener('drop', ev => {
+                const file = ev.dataTransfer.files[0];
+                if (file && file.type.startsWith('image/')) {
+                    const dt = new DataTransfer();
+                    dt.items.add(file);
+                    document.getElementById('photoFile').files = dt.files;
+                    handlePhotoFile(document.getElementById('photoFile'));
+                }
+            });
+        });
+        // ===== END PHOTO HELPERS =====
+
+        function loadStudents() {
+            const tbody = document.querySelector('#studentsTable tbody');
+            const noDataMsg = document.getElementById('noDataMsg');
+            const searchQuery = document.getElementById('stuSearch').value.toLowerCase();
+            const classFilter = document.getElementById('classFilter').value;
+            
+            tbody.innerHTML = '';
+            
+            const filteredStudents = students.filter(s => {
+                const matchesSearch = s.name.toLowerCase().includes(searchQuery);
+                const matchesClass = classFilter === 'All' || s.className === classFilter;
+                return matchesSearch && matchesClass;
+            });
+
+            if (filteredStudents.length === 0) {
+                noDataMsg.style.display = 'block';
+                noDataMsg.innerText = searchQuery ? 'No students match your search.' : "No students added yet. Click 'Add New Student' to begin.";
+                return;
+            }
+            
+            noDataMsg.style.display = 'none';
+            
+            filteredStudents.forEach(student => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><img src="${student.photo || defaultAvatar}" class="student-photo" alt="Photo" onerror="this.src='${defaultAvatar}'"></td>
+                    <td style="color: var(--text-primary); font-weight: 500;">${student.name}</td>
+                    <td><span style="background: rgba(10,54,34,0.1); color: var(--text-primary); padding: 0.2rem 0.5rem; border-radius: 4px; font-family: monospace;">${student.adminNo}</span></td>
+                    <td>${student.className}</td>
+                    <td>${student.mobile}</td>
+                    <td>
+                        <button class="action-btn edit-btn" onclick="editStudent(${student.id})">Edit</button>
+                        <button class="action-btn delete-btn" onclick="deleteStudent(${student.id})">Delete</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function openModal() {
+            document.getElementById('studentForm').reset();
+            document.getElementById('studentId').value = '';
+            document.getElementById('modalTitle').innerText = 'Add New Student';
+            setCirclePreview(null); // reset photo circle
+            document.getElementById('studentModal').classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('studentModal').classList.remove('show');
+        }
+
+        function editStudent(id) {
+            const student = students.find(s => s.id === id);
+            if (student) {
+                document.getElementById('studentId').value = student.id;
+                document.getElementById('photoUrl').value = student.photo || '';
+                document.getElementById('stuName').value = student.name;
+                document.getElementById('stuClass').value = student.className;
+                document.getElementById('stuAdminNo').value = student.adminNo;
+                document.getElementById('stuMobile').value = student.mobile;
+                document.getElementById('stuDob').value = student.dob || '';
+                document.getElementById('stuEmail').value = student.email || '';
+                document.getElementById('stuParentPhone').value = student.parentPhone;
+                document.getElementById('stuPassword').value = student.password || '1234';
+                document.getElementById('stuAddress').value = student.address;
+                setCirclePreview(student.photo || null); // show existing photo in circle
+                
+                document.getElementById('modalTitle').innerText = 'Edit Student Details';
+                document.getElementById('studentModal').classList.add('show');
+            }
+        }
+
+        function deleteStudent(id) {
+            if (confirm('Are you sure you want to delete this student record?')) {
+                students = students.filter(s => s.id !== id);
+                saveStudents();
+                loadStudents();
+            }
+        }
+
+        function saveStudents() {
+            localStorage.setItem('noorulHikmaStudents', JSON.stringify(students));
+        }
+
+        document.getElementById('studentForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const btn = this.querySelector('button[type="submit"]');
+            btn.disabled = true;
+            btn.textContent = 'Saving...';
+
+            const id = document.getElementById('studentId').value;
+            let photoData = document.getElementById('photoUrl').value;
+            
+            // Handle file upload if present
+            const fileInput = document.getElementById('photoFile');
+            if (fileInput.files && fileInput.files[0]) {
+                photoData = await new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => resolve(e.target.result);
+                    reader.readAsDataURL(fileInput.files[0]);
+                });
+            }
+
+            const studentData = {
+                id: id ? parseInt(id) : Date.now(),
+                photo: photoData,
+                name: document.getElementById('stuName').value,
+                className: document.getElementById('stuClass').value,
+                adminNo: document.getElementById('stuAdminNo').value,
+                mobile: document.getElementById('stuMobile').value,
+                dob: document.getElementById('stuDob').value,
+                email: document.getElementById('stuEmail').value,
+                parentPhone: document.getElementById('stuParentPhone').value,
+                password: document.getElementById('stuPassword').value || '1234',
+                address: document.getElementById('stuAddress').value
+            };
+
+            if (id) {
+                // Update
+                const index = students.findIndex(s => s.id === parseInt(id));
+                if (index !== -1) students[index] = studentData;
+            } else {
+                // Add new
+                students.push(studentData);
+            }
+
+            saveStudents();
+            closeModal();
+            loadStudents();
+            btn.disabled = false;
+            btn.textContent = 'Save Student';
+        });
+
+        // Close modal on outside click
+        window.addEventListener('click', function(e) {
+            if (e.target.id === 'studentModal') {
+                closeModal();
+            }
+        });
+
+        window.onload = loadStudents;
+
+        // CSV Export
+        function exportStudentsCSV() {
+            const students = JSON.parse(localStorage.getItem('noorulHikmaStudents')) || [];
+            if (students.length === 0) { alert('No students to export.'); return; }
+            const headers = ['Name','Class','Admission ID','Mobile','DOB','Email','Parent Phone','Address'];
+            const rows = students.map(s => [
+                `"${s.name}"`, `"${s.className}"`, `"${s.adminNo}"`, `"${s.mobile}"`,
+                `"${s.dob || ''}"`  , `"${s.email || ''}"`, `"${s.parentPhone}"`, `"${s.address}"`
+            ].join(','));
+            const csv = [headers.join(','), ...rows].join('\n');
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'noorul_hikma_students.csv';
+            a.click();
+        }
+    </script>
+</body>
+</html>
